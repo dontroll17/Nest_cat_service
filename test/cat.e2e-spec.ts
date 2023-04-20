@@ -78,13 +78,15 @@ describe('should POST /cats', () => {
     });
 
     it('should not create new cat', async () => {
-        await request(app.getHttpServer())
+        const req = await request(app.getHttpServer())
             .post('/cats')
             .send({
                 nick: 'test',
             })
             .set('Accept', 'applization/json')
             .expect('Content-Type', /json/)
-            .expect(500);
+            .expect(400);
+        
+        expect(req.text).toBe('{"statusCode":400,"message":"Bad request"}');
     });
 });

@@ -17,8 +17,12 @@ export class CatsService {
     }
 
     async createCat (dto: CreateCatDto): Promise<CatsEntity> {
-        const cat = this.catRepo.create(dto);
-        return await this.catRepo.save(cat);
+        try {
+            const cat = this.catRepo.create(dto);
+            return await this.catRepo.save(cat);
+        } catch(e) {
+            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+        }
     }
 
     async removeCat(id: string): Promise<void> {
