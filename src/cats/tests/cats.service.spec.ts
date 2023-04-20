@@ -5,6 +5,8 @@ import { CatsEntity } from '../entities/cats.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CatsRepositoryMock } from './mock/FakeRepo';
+import { fakeCat } from './test-data/fakeCat';
+import { fakeCatEntity } from './test-data/fakeEntity';
 
 describe('CatsService', () => {
   let service: CatsService;
@@ -51,4 +53,13 @@ describe('CatsService', () => {
     });
   });
 
+  describe('should test add operation', () => {
+    it('should add new cat', async () => {
+      const newCat = await service.createCat(fakeCat);
+      const len = (await service.getAllCats()).length;
+      expect(newCat).toEqual(fakeCatEntity);
+      expect(len).toEqual(1);
+    });
+  });
+  
 });

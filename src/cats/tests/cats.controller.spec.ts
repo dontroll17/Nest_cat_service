@@ -46,32 +46,11 @@ describe('CatsController', () => {
     });
   });
 
-
-  describe('Fake repository testing', () => {
-    it('should create and save new cat', async () => {
-      const newCat = mock.create(fakeCat);
-      const data = await mock.save(newCat);
-  
-      expect(data).toEqual(fakeCatEntity);
-    });
-  
-    it('should find cat', async () => {
-      await mock.save(fakeCatEntity);
-  
-      const cat = await mock.findOne({
-        where: { id: 'uuid' }
-      });
-  
-      expect(cat).toEqual(fakeCatEntity);
-    });
-
-    it('should delete cat', async () => {
-      await mock.save(fakeCatEntity);
-      expect((await mock.find()).length).toBe(1);
-      
-      await mock.delete('uuid');
-
-      expect((await mock.find()).length).toBe(0);
-    });
-  });
+  describe('should test controller methods', () => {
+    it('should test get controller', async () => {
+      const data = await controller.getAllCats();
+      expect(data).toStrictEqual([]);
+      expect(data.length).toBe(0);
+    })
+  })
 });
