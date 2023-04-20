@@ -59,3 +59,32 @@ describe('should GET /cats', () => {
         ]);
     });
 });
+
+describe('should POST /cats', () => {
+    it('should return a new created cat', async () => {
+        const { body } = await request(app.getHttpServer())
+            .post('/cats')
+            .send({
+                nick: 'test',
+                role: 'tester'
+            })
+            .set('Accept', 'applization/json')
+            .expect('Content-Type', /json/)
+            .expect(201);
+
+        expect(body).toEqual({
+            id: expect.any(String), nick: 'test', role: 'tester'
+        });
+    });
+
+    it('should not create new cat', async () => {
+        await request(app.getHttpServer())
+            .post('/cats')
+            .send({
+                nick: 'test',
+            })
+            .set('Accept', 'applization/json')
+            .expect('Content-Type', /json/)
+            .expect(500);
+    });
+});
