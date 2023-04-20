@@ -56,18 +56,17 @@ describe('CatsService', () => {
   describe('should test add operation', () => {
     it('should add new cat', async () => {
       const newCat = await service.createCat(fakeCat);
-      const len = (await service.getAllCats()).length;
+      const data = await service.getAllCats();
       expect(newCat).toEqual(fakeCatEntity);
-      expect(len).toEqual(1);
+      expect(data).toHaveLength(1);
     });
 
     it('shouldn`t add new cat', async () => {
       //@ts-ignore
       const cat = await service.createCat(badCat);
       const data = await service.getAllCats();
-      const len = data.length;
       expect(cat).toBe(undefined);
-      expect(len).toBe(0);
+      expect(data).toHaveLength(0);
     });
   });
   
