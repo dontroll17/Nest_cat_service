@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CatsRepositoryMock } from './mock/FakeRepo';
 import { fakeCat } from './test-data/fakeCat';
+import { fakeCatEntity } from './test-data/fakeEntity';
 
 describe('CatsController', () => {
   let controller: CatsController;
@@ -45,10 +46,21 @@ describe('CatsController', () => {
     });
   });
 
-  it('should create new cat', async () => {
+
+  it('should create and save new cat', async () => {
     const newCat = mock.create(fakeCat);
     const data = await mock.save(newCat);
 
-    expect(data).toEqual({id: 'string', nick: fakeCat.nick, role: fakeCat.role});
+    expect(data).toEqual(fakeCatEntity);
+  });
+
+  it('should find cat', async () => {
+    await mock.save(fakeCatEntity);
+
+    const cat = await mock.findOne({
+      where: { id: 'uuid' }
+    });
+
+    expect(cat).toEqual(fakeCatEntity);
   });
 });
