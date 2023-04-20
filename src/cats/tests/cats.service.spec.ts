@@ -4,7 +4,7 @@ import { CatsController } from '../cats.controller';
 import { CatsEntity } from '../entities/cats.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { fakeCat } from './test-data/fakeCat';
+import { CatsRepositoryMock } from './mock/FakeRepo';
 
 describe('CatsService', () => {
   let service: CatsService;
@@ -16,7 +16,7 @@ describe('CatsService', () => {
         CatsService,
         {
           provide: getRepositoryToken(CatsEntity),
-          useFactory: jest.fn()
+          useClass: CatsRepositoryMock
         }
       ],
       controllers: [CatsController]
@@ -41,6 +41,13 @@ describe('CatsService', () => {
 
     it('should be remove operation', () => {
       expect(service.removeCat).toBeDefined();
+    });
+  });
+
+  describe('should test get operation', () => {
+    it('should return all cats', async () => {
+      const cats = await service.getAllCats();
+      expect(cats).toStrictEqual([]);
     });
   });
 
