@@ -5,7 +5,7 @@ import { CatsEntity } from '../entities/cats.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CatsRepositoryMock } from './mock/FakeRepo';
-import { fakeCat } from './test-data/fakeCat';
+import { badCat, fakeCat } from './test-data/fakeCats';
 import { fakeCatEntity } from './test-data/fakeEntity';
 
 describe('CatsService', () => {
@@ -59,6 +59,15 @@ describe('CatsService', () => {
       const len = (await service.getAllCats()).length;
       expect(newCat).toEqual(fakeCatEntity);
       expect(len).toEqual(1);
+    });
+
+    it('shouldn`t add new cat', async () => {
+      //@ts-ignore
+      const cat = await service.createCat(badCat);
+      const data = await service.getAllCats();
+      const len = data.length;
+      expect(cat).toBe(undefined);
+      expect(len).toBe(0);
     });
   });
   

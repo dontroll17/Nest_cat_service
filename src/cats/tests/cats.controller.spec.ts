@@ -5,7 +5,7 @@ import { CatsEntity } from '../entities/cats.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CatsRepositoryMock } from './mock/FakeRepo';
-import { fakeCat } from './test-data/fakeCat';
+import { fakeCat } from './test-data/fakeCats';
 import { fakeCatEntity } from './test-data/fakeEntity';
 
 describe('CatsController', () => {
@@ -28,7 +28,7 @@ describe('CatsController', () => {
     mock = module.get(getRepositoryToken(CatsEntity))
   });
 
-  describe('should crud op be exist', () => {
+  describe('should crud operations be exist', () => {
     it('should be getAll operation', () => {
       expect(controller.getAllCats).toBeDefined();
     });
