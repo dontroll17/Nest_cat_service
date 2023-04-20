@@ -4,7 +4,6 @@ import { CatsController } from '../cats.controller';
 import { CatsEntity } from '../entities/cats.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CatsRepositoryMock } from './mock/FakeRepo';
 import { fakeCat } from './test-data/fakeCat';
 
 describe('CatsService', () => {
@@ -17,7 +16,7 @@ describe('CatsService', () => {
         CatsService,
         {
           provide: getRepositoryToken(CatsEntity),
-          useClass: CatsRepositoryMock
+          useFactory: jest.fn()
         }
       ],
       controllers: [CatsController]
@@ -45,12 +44,4 @@ describe('CatsService', () => {
     });
   });
 
-  
-
-  it('should create new cat', async () => {
-    const newCat = mock.create(fakeCat);
-    const data = await mock.save(newCat);
-
-    expect(data).toEqual({id: 'string', nick: fakeCat.nick, role: fakeCat.role});
-  });
 });
