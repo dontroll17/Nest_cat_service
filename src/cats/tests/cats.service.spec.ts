@@ -26,7 +26,7 @@ describe('CatsService', () => {
     mock = module.get(getRepositoryToken(CatsEntity))
   });
 
-  describe('should crud op be exist', () => {
+  describe('should crud operations be exist', () => {
     it('should be getAll operation', () => {
       expect(service.getAllCats).toBeDefined();
     });
