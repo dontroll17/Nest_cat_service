@@ -10,6 +10,10 @@ interface Query {
 export class CatsRepositoryMock {
     public base = [];
 
+    public find(){
+        return this.base;
+    } 
+
     public create(dto: CreateCatDto): CatsEntity {
         return {
             id: 'uuid',
@@ -27,7 +31,7 @@ export class CatsRepositoryMock {
         this.base.splice(idx, 1);
     }
 
-    public async findOne(query: Query): Promise<any> {
+    public async findOne(query: Query): Promise<CatsEntity> {
         const cat = this.base.find(i => i.id === query.where.id);
         return cat;
     }
