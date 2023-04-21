@@ -24,7 +24,7 @@ describe('CatsService', () => {
         },
         {
           provide: Logger,
-          useValue: { log: jest.fn(), setContext: jest.fn() }
+          useValue: { log: jest.fn() }
         }
       ],
       controllers: [CatsController]

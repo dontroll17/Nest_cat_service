@@ -11,8 +11,7 @@ export class CatsService {
         @InjectRepository(CatsEntity)
         private catRepo: Repository<CatsEntity>,
         private logger: Logger
-    ) {
-    }
+    ) {}
 
     async getAllCats(): Promise<CatsEntity[]> {
         this.logger.log('call get method')
