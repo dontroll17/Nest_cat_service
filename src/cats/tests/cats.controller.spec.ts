@@ -50,7 +50,18 @@ describe('CatsController', () => {
     it('should test get controller', async () => {
       const data = await controller.getAllCats();
       expect(data).toStrictEqual([]);
-      expect(data.length).toBe(0);
-    })
-  })
+      expect(data).toHaveLength(0);
+    });
+
+    it('should create new cat', async () => {
+      const cat = await controller.addCat(fakeCat);
+      expect(cat).toEqual(fakeCatEntity);
+
+      const data = await controller.getAllCats();
+      expect(data).toHaveLength(1);
+      
+      const newCat = data.find(i => i.id === fakeCatEntity.id);
+      expect(newCat).toBeDefined();
+    });
+  });
 });
