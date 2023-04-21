@@ -90,3 +90,29 @@ describe('should POST /cats', () => {
         expect(req.text).toBe('{"statusCode":400,"message":"Bad request"}');
     });
 });
+
+describe('should DELETE /cats/:id', () => {
+    it('should remove cat', async () => {
+        await repository.save([
+            {nick: 'test', role: 'tester'},
+            {nick: 'test2', role: 'main tester'}
+        ]);
+
+        const { body } = await request(app.getHttpServer())
+            .get('/cats')
+            .set('Accept', 'applization/json');
+
+        const tester = body.find(i => i.role === 'tester');
+        expect(tester).toBeDefined();
+
+        await request(app.getHttpServer())
+            .delete(`/cats/${tester.id}`)
+            .expect(204);
+
+        const allData = await repository.find();
+        expect(allData).toHaveLength(1);
+        expect(allData).toEqual([
+            {id: expect.any(String), nick: 'test2', role: 'main tester'}
+        ]);
+    });
+});
