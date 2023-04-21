@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CatsEntity } from './entities/cats.entity';
 import { Repository } from 'typeorm';
@@ -9,10 +9,13 @@ import { CreateCatDto } from './dto/create-cat.dto';
 export class CatsService {
     constructor(
         @InjectRepository(CatsEntity)
-        private catRepo: Repository<CatsEntity>
-    ) {}
+        private catRepo: Repository<CatsEntity>,
+        private logger: Logger
+    ) {
+    }
 
     async getAllCats(): Promise<CatsEntity[]> {
+        this.logger.log('call get method')
         return await this.catRepo.find();
     }
 

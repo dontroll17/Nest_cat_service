@@ -7,10 +7,12 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { CatsRepositoryMock } from './mock/FakeRepo';
 import { badCat, fakeCat } from './test-data/fakeCats';
 import { fakeCatEntity } from './test-data/fakeEntity';
+import { Logger } from '@nestjs/common';
 
 describe('CatsService', () => {
   let service: CatsService;
-  let mock: Repository<CatsEntity>
+  let mock: Repository<CatsEntity>;
+  let logger: Logger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,13 +21,18 @@ describe('CatsService', () => {
         {
           provide: getRepositoryToken(CatsEntity),
           useClass: CatsRepositoryMock
+        },
+        {
+          provide: Logger,
+          useValue: { log: jest.fn(), setContext: jest.fn() }
         }
       ],
       controllers: [CatsController]
     }).compile();
 
     service = module.get<CatsService>(CatsService);
-    mock = module.get(getRepositoryToken(CatsEntity))
+    mock = module.get(getRepositoryToken(CatsEntity));
+    logger = module.get(Logger);
   });
 
   describe('should crud operations be exist', () => {
