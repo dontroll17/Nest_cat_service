@@ -63,5 +63,18 @@ describe('CatsController', () => {
       const newCat = data.find(i => i.id === fakeCatEntity.id);
       expect(newCat).toBeDefined();
     });
+
+    it('should remove cat', async () => {
+      await mock.save(fakeCatEntity);
+
+      const beforeData = await controller.getAllCats();
+      expect(beforeData).toHaveLength(1);
+      const cat = beforeData.find(i => i.id === fakeCatEntity.id);
+      expect(cat).toBeDefined();
+
+      await controller.removeCat(fakeCatEntity.id);
+      const afterData = await controller.getAllCats();
+      expect(afterData).toHaveLength(0);
+    });
   });
 });

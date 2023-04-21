@@ -30,9 +30,10 @@ export class CatsRepositoryMock {
         return entity;
     }
 
-    public async delete(id: string): Promise<void> {
+    public async delete(id: string): Promise<object> { 
         const idx = this.base.indexOf(id);
         this.base.splice(idx, 1);
+        return {affected: 1};
     }
 
     public async findOne(query: Query): Promise<CatsEntity> {

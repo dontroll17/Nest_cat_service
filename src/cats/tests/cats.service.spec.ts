@@ -69,5 +69,13 @@ describe('CatsService', () => {
       expect(data).toHaveLength(0);
     });
   });
-  
+
+  describe('should test delete operation', () => {
+    it('should remove cat', async () => {
+      await mock.save(fakeCatEntity);
+      await service.removeCat(fakeCatEntity.id);
+      //@ts-ignore
+      expect(mock.base).toHaveLength(0);
+    });
+  });
 });
