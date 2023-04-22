@@ -20,14 +20,14 @@ describe('CatsService', () => {
         CatsService,
         {
           provide: getRepositoryToken(CatsEntity),
-          useClass: CatsRepositoryMock
+          useClass: CatsRepositoryMock,
         },
         {
           provide: Logger,
-          useValue: { log: jest.fn() }
-        }
+          useValue: { log: jest.fn() },
+        },
       ],
-      controllers: [CatsController]
+      controllers: [CatsController],
     }).compile();
 
     service = module.get<CatsService>(CatsService);
@@ -86,12 +86,19 @@ describe('CatsService', () => {
     });
   });
 
-  describe("should test change operation", () => {
+  describe('should test change operation', () => {
     it('should change cat data', async () => {
       await mock.save(fakeCatEntity);
 
-      const change = await service.changeCat(fakeCatEntity.id, {nick: 'new nick', role: 'new role'});
-      expect(change).toEqual({id: expect.any(String), nick: 'new nick', role: 'new role'});
+      const change = await service.changeCat(fakeCatEntity.id, {
+        nick: 'new nick',
+        role: 'new role',
+      });
+      expect(change).toEqual({
+        id: expect.any(String),
+        nick: 'new nick',
+        role: 'new role',
+      });
     });
   });
 });

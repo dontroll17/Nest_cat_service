@@ -15,8 +15,8 @@ import 'dotenv/config';
       password: process.env.DB_PASS,
       database: process.env.DB_DATABASE,
       entities: [CatsEntity],
-      synchronize: true
-    })
+      synchronize: true,
+    }),
   ],
   controllers: [],
   providers: [],

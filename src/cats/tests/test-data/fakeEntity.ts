@@ -1,7 +1,5 @@
 export const fakeCatEntity = {
-    
-    id: 'uuid', 
-    nick: 'IIaIIIKa', 
-    role: 'killer'
-    
-}
+  id: 'uuid',
+  nick: 'IIaIIIKa',
+  role: 'killer',
+};
