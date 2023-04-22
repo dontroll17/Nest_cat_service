@@ -6,13 +6,23 @@ import { CatsEntity } from '../src/cats/entities/cats.entity';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
 import 'dotenv/config';
+import { AuthModule } from '../src/auth/auth.module';
+import { AuthController } from '../src/auth/auth.controller';
+import { AuthService } from '../src/auth/auth.service';
+import { AuthEntity } from '../src/auth/entities/auth.entitty';
+import { JwtService } from '@nestjs/jwt';
+import { JWT } from 'src/auth/interface/jwt.interface';
 
 let app: INestApplication;
 let repository: Repository<CatsEntity>;
+let authRepository: Repository<AuthEntity>;
+let authService: AuthService;
+let token: JWT;
 
 beforeAll(async () => {
   const module = await Test.createTestingModule({
     imports: [
+      AuthModule,
       CatsModule,
       TypeOrmModule.forRoot({
         type: 'postgres',
@@ -21,15 +31,23 @@ beforeAll(async () => {
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASS,
         database: process.env.DB_TEST_DATABASE,
-        entities: [CatsEntity],
+        entities: [CatsEntity, AuthEntity],
         synchronize: true,
       }),
+      TypeOrmModule.forFeature([AuthEntity])
     ],
+    providers: [
+      AuthService, JwtService
+    ]
   }).compile();
 
   app = module.createNestApplication();
   repository = module.get(getRepositoryToken(CatsEntity));
+  authRepository = module.get(getRepositoryToken(AuthEntity));
+  authService = module.get(AuthService);
   await app.init();
+
+  token = await authService.login({login: 'tester', password: '12345678'});
 });
 
 afterAll(async () => {
@@ -37,7 +55,7 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  await repository.query('DELETE FROM cats_entity');
+  await repository.query('DELETE FROM cats_entity;');
 });
 
 describe('should GET /cats', () => {
@@ -70,6 +88,7 @@ describe('should POST /cats', () => {
         vacant: true,
         coast: 500
       })
+      .set({Authorization: 'Bearer ' + token.accessToken})
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
       .expect(201);
@@ -89,6 +108,7 @@ describe('should POST /cats', () => {
       .send({
         nick: 'test',
       })
+      .set({Authorization: 'Bearer ' + token.accessToken})
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
       .expect(400);
@@ -111,7 +131,10 @@ describe('should DELETE /cats/:id', () => {
     const tester = body.find((i) => i.role === 'tester');
     expect(tester).toBeDefined();
 
-    await request(app.getHttpServer()).delete(`/cats/${tester.id}`).expect(204);
+    await request(app.getHttpServer())
+      .delete(`/cats/${tester.id}`)
+      .set({Authorization: 'Bearer ' + token.accessToken})
+      .expect(204);
 
     const allData = await repository.find();
     expect(allData).toHaveLength(1);
@@ -134,6 +157,7 @@ describe('should PUT /cats/:id', () => {
         vacant: true,
         coast: 500
       })
+      .set({Authorization: 'Bearer ' + token.accessToken})
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
       .expect(200);

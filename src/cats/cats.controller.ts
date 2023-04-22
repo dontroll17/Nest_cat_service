@@ -8,11 +8,13 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards
 } from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { CatsService } from './cats.service';
 import { CatsEntity } from './entities/cats.entity';
 import { ChangeCatDto } from './dto/change-cat.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('cats')
 export class CatsController {
@@ -23,11 +25,13 @@ export class CatsController {
     return this.service.getAllCats();
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async addCat(@Body() dto: CreateCatDto): Promise<CatsEntity> {
     return this.service.createCat(dto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(204)
   async removeCat(
@@ -42,6 +46,7 @@ export class CatsController {
     return await this.service.removeCat(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put(':id')
   async changeCat(
     @Param(
