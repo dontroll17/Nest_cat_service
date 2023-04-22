@@ -21,13 +21,13 @@ describe('CatsController', () => {
         CatsService,
         {
           provide: getRepositoryToken(CatsEntity),
-          useClass: CatsRepositoryMock
+          useClass: CatsRepositoryMock,
         },
         {
           provide: Logger,
-          useValue: { log: jest.fn() }
-        }
-      ]
+          useValue: { log: jest.fn() },
+        },
+      ],
     }).compile();
 
     controller = module.get<CatsController>(CatsController);
@@ -66,8 +66,8 @@ describe('CatsController', () => {
 
       const data = await controller.getAllCats();
       expect(data).toHaveLength(1);
-      
-      const newCat = data.find(i => i.id === fakeCatEntity.id);
+
+      const newCat = data.find((i) => i.id === fakeCatEntity.id);
       expect(newCat).toBeDefined();
     });
 
@@ -76,12 +76,26 @@ describe('CatsController', () => {
 
       const beforeData = await controller.getAllCats();
       expect(beforeData).toHaveLength(1);
-      const cat = beforeData.find(i => i.id === fakeCatEntity.id);
+      const cat = beforeData.find((i) => i.id === fakeCatEntity.id);
       expect(cat).toBeDefined();
 
       await controller.removeCat(fakeCatEntity.id);
       const afterData = await controller.getAllCats();
       expect(afterData).toHaveLength(0);
+    });
+
+    it('should change cat data', async () => {
+      await mock.save(fakeCatEntity);
+
+      const change = await controller.changeCat(fakeCatEntity.id, {
+        nick: 'new nick',
+        role: 'new role',
+      });
+      expect(change).toEqual({
+        id: expect.any(String),
+        nick: 'new nick',
+        role: 'new role',
+      });
     });
   });
 });

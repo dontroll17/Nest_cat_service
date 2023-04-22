@@ -17,6 +17,8 @@ Pet project.
 $ npm ci
 ```
 
+create .env file
+
 ## Running the app
 
 ```bash

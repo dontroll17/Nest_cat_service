@@ -9,7 +9,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Cats service')
     .setDescription('Cats service API description')
-    .setVersion('0.5')
+    .setVersion('0.6')
     .addTag('cats')
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -18,10 +18,10 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true
-    })
+      forbidNonWhitelisted: true,
+    }),
   );
-  
+
   await app.listen(3000);
 }
 bootstrap();
