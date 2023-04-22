@@ -12,7 +12,12 @@ CREATE TABLE cats_entity (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     nick VARCHAR(255) NOT NULL UNIQUE,
     role VARCHAR(255) NOT NULL
-);\n`
+);
+CREATE TABLE auth (
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    login VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);`;
 
 const main = async () => {
     await fs.writeFile(filePath, createStr);
