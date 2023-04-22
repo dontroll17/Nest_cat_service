@@ -19,8 +19,8 @@ install k6 for load test [instalation](https://k6.io/docs/get-started/installati
 $ npm ci
 ```
 
-create .env file
-db create in docker(create user database)
+<p>create .env file</p>
+<p>db create in docker(create user and database)</p>
 ```
 npm run migration
 cd migrations
