@@ -13,6 +13,8 @@ Pet project.
 
 ## Installation
 
+install k6 for load test [instalation](https://k6.io/docs/get-started/installation/)
+
 ```bash
 $ npm ci
 ```
