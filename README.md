@@ -13,11 +13,20 @@ Pet project.
 
 ## Installation
 
+install k6 for load test [instalation](https://k6.io/docs/get-started/installation/)
+
 ```bash
 $ npm ci
 ```
 
-create .env file
+<p>create .env file</p>
+<p>db create in docker(create user and database)</p>
+
+```bash
+$ npm run migration
+$ cd migrations
+$ docker exec -i ${container hash} psql -U ${postgres user} -d{database} < data.sql
+```
 
 ## Running the app
 
@@ -43,6 +52,9 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+
+# load test
+$ npm run load_test
 ```
 
 ## License

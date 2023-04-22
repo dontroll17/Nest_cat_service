@@ -1,21 +1,15 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
-export class CatsEntity {
+@Entity('auth')
+export class AuthEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({
     unique: true,
   })
-  nick: string;
+  login: string;
 
   @Column()
-  role: string;
-
-  @Column()
-  vacant: boolean;
-
-  @Column()
-  coast: number;
+  password: string;
 }
