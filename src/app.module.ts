@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { CatsModule } from './cats/cats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CatsEntity } from './cats/entities/cats.entity';
 import { AuthModule } from './auth/auth.module';
 import 'dotenv/config';
 import { AuthEntity } from './auth/entities/auth.entitty';
+import { RequestLoggerMiddleware } from './middleware/logger.middlewars';
 
 @Module({
   imports: [
@@ -24,4 +25,8 @@ import { AuthEntity } from './auth/entities/auth.entitty';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+  }
+}
