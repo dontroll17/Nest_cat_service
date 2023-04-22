@@ -6,21 +6,15 @@ import { JWT } from './interface/jwt.interface';
 
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private service: AuthService
-    ) {}
+  constructor(private service: AuthService) {}
 
-    @Post('login')
-    async login(
-        @Body() userDto: UserDto
-    ): Promise<JWT> {
-        return await this.service.login(userDto);
-    }
+  @Post('login')
+  async login(@Body() userDto: UserDto): Promise<JWT> {
+    return await this.service.login(userDto);
+  }
 
-    @Post('register')
-    async register(
-        @Body() dto: CreateUserDto
-    ): Promise<JWT> {
-        return await this.service.register(dto);
-    }
+  @Post('register')
+  async register(@Body() dto: CreateUserDto): Promise<JWT> {
+    return await this.service.register(dto);
+  }
 }

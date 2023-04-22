@@ -6,7 +6,7 @@ export class CatsEntity {
   id: string;
 
   @Column({
-    unique: true
+    unique: true,
   })
   nick: string;
 
@@ -14,8 +14,8 @@ export class CatsEntity {
   role: string;
 
   @Column()
-  vacant: boolean
+  vacant: boolean;
 
   @Column()
-  coast: number
+  coast: number;
 }

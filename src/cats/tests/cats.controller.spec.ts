@@ -91,14 +91,14 @@ describe('CatsController', () => {
         nick: 'new nick',
         role: 'new role',
         vacant: true,
-        coast: 500
+        coast: 500,
       });
       expect(change).toEqual({
         id: expect.any(String),
         nick: 'new nick',
         role: 'new role',
         vacant: true,
-        coast: 500
+        coast: 500,
       });
     });
   });

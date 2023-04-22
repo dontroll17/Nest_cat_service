@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { AuthEntity } from './entities/auth.entitty';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,56 +16,54 @@ import { User } from './interface/user.interface';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        @InjectRepository(AuthEntity)
-        private auth: Repository<AuthEntity>,
-        private jwtService: JwtService
-    ) {}
+  constructor(
+    @InjectRepository(AuthEntity)
+    private auth: Repository<AuthEntity>,
+    private jwtService: JwtService,
+  ) {}
 
-    async genToken(user: User) {
-        const payload = { id: user.id, login: user.login};
-        return { accessToken: this.jwtService.sign(payload)};
+  async genToken(user: User) {
+    const payload = { id: user.id, login: user.login };
+    return { accessToken: this.jwtService.sign(payload) };
+  }
+
+  async validateUser(dto: UserDto) {
+    const user = await this.auth.findOne({ where: { login: dto.login } });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    async validateUser(dto: UserDto) {
-        const user = await this.auth.findOne({where: {login: dto.login}});
-        if(!user) {
-            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-        }
+    const passCheck = await bcrypt.compare(dto.password, user.password);
 
-        const passCheck = await bcrypt.compare(dto.password, user.password);
-
-        if(user && passCheck) {
-            return {
-                id: user.id,
-                login: user.login
-            }
-        }
-        
-        throw new UnauthorizedException({ message: 'Wrong email or password' });
+    if (user && passCheck) {
+      return {
+        id: user.id,
+        login: user.login,
+      };
     }
 
-        
+    throw new UnauthorizedException({ message: 'Wrong email or password' });
+  }
 
-    async register(dto: CreateUserDto) {
-        const user = await this.auth.findOne({where: {login: dto.login}});
-        if(user) {
-            throw new HttpException('user already register', HttpStatus.CONFLICT);
-        }
-
-        const hash = await bcrypt.hash(dto.password, Number(process.env.SALT));
-        
-        const createUser = this.auth.create({
-            ...dto,
-            password: hash
-        });
-
-        await this.auth.save(createUser);
-        return this.genToken({id: createUser.id, login: createUser.login});
+  async register(dto: CreateUserDto) {
+    const user = await this.auth.findOne({ where: { login: dto.login } });
+    if (user) {
+      throw new HttpException('user already register', HttpStatus.CONFLICT);
     }
 
-    async login(dto: UserDto) {
-        const user = await this.validateUser(dto);
-        return this.genToken(user);
-    }
+    const hash = await bcrypt.hash(dto.password, Number(process.env.SALT));
+
+    const createUser = this.auth.create({
+      ...dto,
+      password: hash,
+    });
+
+    await this.auth.save(createUser);
+    return this.genToken({ id: createUser.id, login: createUser.login });
+  }
+
+  async login(dto: UserDto) {
+    const user = await this.validateUser(dto);
+    return this.genToken(user);
+  }
 }

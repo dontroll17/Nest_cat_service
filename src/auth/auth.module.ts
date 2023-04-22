@@ -9,19 +9,16 @@ import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy
-  ],
+  providers: [AuthService, JwtStrategy],
   imports: [
     TypeOrmModule.forFeature([AuthEntity]),
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
       signOptions: {
-        expiresIn: '6h'
-      }
-    })
+        expiresIn: '6h',
+      },
+    }),
   ],
-  exports: [AuthModule]
+  exports: [AuthModule],
 })
 export class AuthModule {}

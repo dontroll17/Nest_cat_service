@@ -7,7 +7,6 @@ import * as request from 'supertest';
 import { Repository } from 'typeorm';
 import 'dotenv/config';
 import { AuthModule } from '../src/auth/auth.module';
-import { AuthController } from '../src/auth/auth.controller';
 import { AuthService } from '../src/auth/auth.service';
 import { AuthEntity } from '../src/auth/entities/auth.entitty';
 import { JwtService } from '@nestjs/jwt';
@@ -34,11 +33,9 @@ beforeAll(async () => {
         entities: [CatsEntity, AuthEntity],
         synchronize: true,
       }),
-      TypeOrmModule.forFeature([AuthEntity])
+      TypeOrmModule.forFeature([AuthEntity]),
     ],
-    providers: [
-      AuthService, JwtService
-    ]
+    providers: [AuthService, JwtService],
   }).compile();
 
   app = module.createNestApplication();
@@ -47,7 +44,7 @@ beforeAll(async () => {
   authService = module.get(AuthService);
   await app.init();
 
-  token = await authService.login({login: 'tester', password: '12345678'});
+  token = await authService.login({ login: 'tester', password: '12345678' });
 });
 
 afterAll(async () => {
@@ -72,8 +69,20 @@ describe('should GET /cats', () => {
       .expect(200);
 
     expect(body).toEqual([
-      { id: expect.any(String), nick: 'troll', role: 'lazy', vacant: true, coast: 500 },
-      { id: expect.any(String), nick: 'llort', role: 'top guy', vacant: true, coast: 500 },
+      {
+        id: expect.any(String),
+        nick: 'troll',
+        role: 'lazy',
+        vacant: true,
+        coast: 500,
+      },
+      {
+        id: expect.any(String),
+        nick: 'llort',
+        role: 'top guy',
+        vacant: true,
+        coast: 500,
+      },
     ]);
   });
 });
@@ -86,9 +95,9 @@ describe('should POST /cats', () => {
         nick: 'test',
         role: 'tester',
         vacant: true,
-        coast: 500
+        coast: 500,
       })
-      .set({Authorization: 'Bearer ' + token.accessToken})
+      .set({ Authorization: 'Bearer ' + token.accessToken })
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
       .expect(201);
@@ -98,7 +107,7 @@ describe('should POST /cats', () => {
       nick: 'test',
       role: 'tester',
       vacant: true,
-      coast: 500
+      coast: 500,
     });
   });
 
@@ -108,7 +117,7 @@ describe('should POST /cats', () => {
       .send({
         nick: 'test',
       })
-      .set({Authorization: 'Bearer ' + token.accessToken})
+      .set({ Authorization: 'Bearer ' + token.accessToken })
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
       .expect(400);
@@ -133,20 +142,31 @@ describe('should DELETE /cats/:id', () => {
 
     await request(app.getHttpServer())
       .delete(`/cats/${tester.id}`)
-      .set({Authorization: 'Bearer ' + token.accessToken})
+      .set({ Authorization: 'Bearer ' + token.accessToken })
       .expect(204);
 
     const allData = await repository.find();
     expect(allData).toHaveLength(1);
     expect(allData).toEqual([
-      { id: expect.any(String), nick: 'test2', role: 'main tester', vacant: true, coast: 500 },
+      {
+        id: expect.any(String),
+        nick: 'test2',
+        role: 'main tester',
+        vacant: true,
+        coast: 500,
+      },
     ]);
   });
 });
 
 describe('should PUT /cats/:id', () => {
   it('should change cat', async () => {
-    await repository.save({ nick: 'test cat', role: 'test cat', vacant: true, coast: 500 });
+    await repository.save({
+      nick: 'test cat',
+      role: 'test cat',
+      vacant: true,
+      coast: 500,
+    });
     const cat = await repository.findOne({ where: { nick: 'test cat' } });
 
     await request(app.getHttpServer())
@@ -155,9 +175,9 @@ describe('should PUT /cats/:id', () => {
         nick: 'test',
         role: 'tester',
         vacant: true,
-        coast: 500
+        coast: 500,
       })
-      .set({Authorization: 'Bearer ' + token.accessToken})
+      .set({ Authorization: 'Bearer ' + token.accessToken })
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
       .expect(200);
@@ -170,7 +190,7 @@ describe('should PUT /cats/:id', () => {
       nick: 'test',
       role: 'tester',
       vacant: true,
-      coast: 500
+      coast: 500,
     });
   });
 });
