@@ -22,9 +22,9 @@ $ npm ci
 <p>create .env file</p>
 <p>db create in docker(create user and database)</p>
 ```bash
-npm run migration
-cd migrations
-docker exec -i ${container hash} psql -U ${postgres user} -d {database} < data.sql
+$ npm run migration
+$ cd migrations
+$ docker exec -i ${container hash} psql -U ${postgres user} -d{database} < data.sql
 ```
 
 ## Running the app
