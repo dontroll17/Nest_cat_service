@@ -1,7 +1,9 @@
 const fs = require('fs/promises');
 
-const createData = async (nick, role) => {
-    const file = await fs.appendFile('./data.sql', `INSERT INTO cats_entity (nick, role) VALUES('${nick}', '${role}');\n`);
+const filePath = './migrations/data.sql';
+
+const createData = async (filePath, nick, role) => {
+    await fs.appendFile(filePath, `INSERT INTO cats_entity (nick, role) VALUES('${nick}', '${role}');\n`);
 }
 
 const createStr = 
@@ -13,14 +15,14 @@ CREATE TABLE cats_entity (
 );\n`
 
 const main = async () => {
-    await fs.writeFile('./migrations/data.sql', createStr);
+    await fs.writeFile(filePath, createStr);
     for(let i = 0; i < 150; i++) {
         if(i < 50) {
-            await createData(`test${i}`, 'junior cat');
+            await createData(filePath,`test${i}`, 'junior cat');
         } else if (i < 100) {
-            await createData(`test${i}`, 'middle cat');
+            await createData(filePath, `test${i}`, 'middle cat');
         } else {
-            await createData(`test${i}`, 'senior cat');
+            await createData(filePath, `test${i}`, 'senior cat');
         }
     }
 }
