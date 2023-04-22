@@ -12,7 +12,6 @@ import { Logger } from '@nestjs/common';
 describe('CatsController', () => {
   let controller: CatsController;
   let mock: Repository<CatsEntity>;
-  let logger: Logger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,17 +21,12 @@ describe('CatsController', () => {
         {
           provide: getRepositoryToken(CatsEntity),
           useClass: CatsRepositoryMock,
-        },
-        {
-          provide: Logger,
-          useValue: { log: jest.fn() },
-        },
+        }
       ],
     }).compile();
 
     controller = module.get<CatsController>(CatsController);
     mock = module.get(getRepositoryToken(CatsEntity));
-    logger = module.get(Logger);
   });
 
   describe('should crud operations be exist', () => {
