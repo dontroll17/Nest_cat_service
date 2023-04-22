@@ -43,8 +43,8 @@ afterEach(async () => {
 describe('should GET /cats', () => {
   it('should return an array of cats', async () => {
     await repository.save([
-      { nick: 'troll', role: 'lazy' },
-      { nick: 'llort', role: 'top guy' },
+      { nick: 'troll', role: 'lazy', vacant: true, coast: 500 },
+      { nick: 'llort', role: 'top guy', vacant: true, coast: 500 },
     ]);
 
     const { body } = await request(app.getHttpServer())
@@ -54,8 +54,8 @@ describe('should GET /cats', () => {
       .expect(200);
 
     expect(body).toEqual([
-      { id: expect.any(String), nick: 'troll', role: 'lazy' },
-      { id: expect.any(String), nick: 'llort', role: 'top guy' },
+      { id: expect.any(String), nick: 'troll', role: 'lazy', vacant: true, coast: 500 },
+      { id: expect.any(String), nick: 'llort', role: 'top guy', vacant: true, coast: 500 },
     ]);
   });
 });
@@ -67,6 +67,8 @@ describe('should POST /cats', () => {
       .send({
         nick: 'test',
         role: 'tester',
+        vacant: true,
+        coast: 500
       })
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
@@ -76,6 +78,8 @@ describe('should POST /cats', () => {
       id: expect.any(String),
       nick: 'test',
       role: 'tester',
+      vacant: true,
+      coast: 500
     });
   });
 
@@ -96,8 +100,8 @@ describe('should POST /cats', () => {
 describe('should DELETE /cats/:id', () => {
   it('should remove cat', async () => {
     await repository.save([
-      { nick: 'test', role: 'tester' },
-      { nick: 'test2', role: 'main tester' },
+      { nick: 'test', role: 'tester', vacant: true, coast: 500 },
+      { nick: 'test2', role: 'main tester', vacant: true, coast: 500 },
     ]);
 
     const { body } = await request(app.getHttpServer())
@@ -112,14 +116,14 @@ describe('should DELETE /cats/:id', () => {
     const allData = await repository.find();
     expect(allData).toHaveLength(1);
     expect(allData).toEqual([
-      { id: expect.any(String), nick: 'test2', role: 'main tester' },
+      { id: expect.any(String), nick: 'test2', role: 'main tester', vacant: true, coast: 500 },
     ]);
   });
 });
 
 describe('should PUT /cats/:id', () => {
   it('should change cat', async () => {
-    await repository.save({ nick: 'test cat', role: 'test cat' });
+    await repository.save({ nick: 'test cat', role: 'test cat', vacant: true, coast: 500 });
     const cat = await repository.findOne({ where: { nick: 'test cat' } });
 
     await request(app.getHttpServer())
@@ -127,6 +131,8 @@ describe('should PUT /cats/:id', () => {
       .send({
         nick: 'test',
         role: 'tester',
+        vacant: true,
+        coast: 500
       })
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
@@ -139,6 +145,8 @@ describe('should PUT /cats/:id', () => {
       id: expect.any(String),
       nick: 'test',
       role: 'tester',
+      vacant: true,
+      coast: 500
     });
   });
 });

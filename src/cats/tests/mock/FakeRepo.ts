@@ -20,6 +20,8 @@ export class CatsRepositoryMock {
       id: 'uuid',
       nick: dto.nick,
       role: dto.role,
+      vacant: dto.vacant,
+      coast: dto.coast
     };
   }
   public async save(entity: CatsEntity): Promise<CatsEntity> {

@@ -5,11 +5,13 @@ import { Repository } from 'typeorm';
 import { AuthEntity } from './entities/auth.entitty';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { InjectionToken } from '@nestjs/common';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let mock: Repository<AuthEntity>
-  let jwt: JwtService
+  let mock: Repository<AuthEntity>;
+  let jwt: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,7 +24,7 @@ describe('AuthController', () => {
             {
               save: jest.fn(),
               findOne: jest.fn((user) => {
-                let base = [{id: 'some id', login: 'cat'}];
+                let base = [{id: 'some id', login: 'cat', password: '12345678'}];
                 let data = base.find(i => i.login === user.where.login);
                 return data;
               }),
@@ -57,6 +59,7 @@ describe('AuthController', () => {
 
   describe('should test beheivor methods', () => {
     it('should test login controller', async () => {
+      jest.spyOn(bcrypt, 'compare').mockImplementation(() => true);
       const res = await controller.login({login: 'cat', password: '12345678'});
       expect(res).toEqual({accessToken: expect.any(String)});
     });

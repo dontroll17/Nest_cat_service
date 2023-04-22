@@ -12,4 +12,10 @@ export class CatsEntity {
 
   @Column()
   role: string;
+
+  @Column()
+  vacant: boolean
+
+  @Column()
+  coast: number
 }
