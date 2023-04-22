@@ -5,7 +5,9 @@ export class CatsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({
+    unique: true
+  })
   nick: string;
 
   @Column()
