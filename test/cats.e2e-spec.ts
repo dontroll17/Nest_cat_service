@@ -116,3 +116,25 @@ describe('should DELETE /cats/:id', () => {
         ]);
     });
 });
+
+describe('should PUT /cats/:id', () => {
+    it('should change cat', async () => {
+        await repository.save({nick: 'test cat', role: 'test cat'});
+        const cat = await repository.findOne({where: {nick: 'test cat'}});
+
+        const req = await request(app.getHttpServer())
+            .put(`/cats/${cat.id}`)
+            .send({
+                nick: 'test',
+                role: 'tester'
+            })
+            .set('Accept', 'applization/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+
+        const base = await repository.find();
+
+        expect(base).toHaveLength(1);
+        expect(base[0]).toEqual({id: expect.any(String), nick: 'test', role: 'tester'});
+    });
+});

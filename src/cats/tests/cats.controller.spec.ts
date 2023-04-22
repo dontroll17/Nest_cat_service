@@ -83,5 +83,12 @@ describe('CatsController', () => {
       const afterData = await controller.getAllCats();
       expect(afterData).toHaveLength(0);
     });
+
+    it('should change cat data', async () => {
+      await mock.save(fakeCatEntity);
+
+      const change = await controller.changeCat(fakeCatEntity.id, {nick: 'new nick', role: 'new role'});
+      expect(change).toEqual({id: expect.any(String), nick: 'new nick', role: 'new role'});
+    });
   });
 });
