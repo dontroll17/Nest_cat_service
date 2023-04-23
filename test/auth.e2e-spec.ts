@@ -22,7 +22,7 @@ beforeAll(async () => {
         password: process.env.DB_PASS,
         database: process.env.DB_TEST_DATABASE,
         entities: [AuthEntity],
-        synchronize: true,
+        synchronize: false,
       }),
     ],
   }).compile();
@@ -47,6 +47,7 @@ describe('should POST /cats', () => {
       .send({
         login: 'test user',
         password: '12345678',
+        role: 'Admin'
       })
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)

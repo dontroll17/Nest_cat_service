@@ -11,12 +11,14 @@ import { AuthService } from '../src/auth/auth.service';
 import { AuthEntity } from '../src/auth/entities/auth.entitty';
 import { JwtService } from '@nestjs/jwt';
 import { JWT } from 'src/auth/interface/jwt.interface';
+import { CacheModule, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 let app: INestApplication;
 let repository: Repository<CatsEntity>;
 let authRepository: Repository<AuthEntity>;
 let authService: AuthService;
 let token: JWT;
+let cache;
 
 beforeAll(async () => {
   const module = await Test.createTestingModule({
@@ -31,9 +33,10 @@ beforeAll(async () => {
         password: process.env.DB_PASS,
         database: process.env.DB_TEST_DATABASE,
         entities: [CatsEntity, AuthEntity],
-        synchronize: true,
+        synchronize: false,
       }),
       TypeOrmModule.forFeature([AuthEntity]),
+      CacheModule.register()
     ],
     providers: [AuthService, JwtService],
   }).compile();
@@ -42,9 +45,10 @@ beforeAll(async () => {
   repository = module.get(getRepositoryToken(CatsEntity));
   authRepository = module.get(getRepositoryToken(AuthEntity));
   authService = module.get(AuthService);
+  cache = module.get(CACHE_MANAGER);
   await app.init();
 
-  token = await authService.login({ login: 'tester', password: '12345678' });
+  token = await authService.login({ login: 'tester', password: '12345678', role: 'Admin' });
 });
 
 afterAll(async () => {
