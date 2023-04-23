@@ -21,10 +21,7 @@ import { CacheModule } from '@nestjs/cache-manager';
       entities: [CatsEntity, AuthEntity],
       synchronize: false,
     }),
-    AuthModule,
-    CacheModule.register({
-      isGlobal: true
-    })
+    AuthModule
   ],
   controllers: [],
   providers: [],

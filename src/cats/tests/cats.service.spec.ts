@@ -7,12 +7,12 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { CatsRepositoryMock } from './mock/FakeRepo';
 import { badCat, fakeCat } from './test-data/fakeCats';
 import { fakeCatEntity } from './test-data/fakeEntity';
-import { Logger } from '@nestjs/common';
+import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 
 describe('CatsService', () => {
   let service: CatsService;
   let mock: Repository<CatsEntity>;
-  let logger: Logger;
+  let cache;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,17 +22,16 @@ describe('CatsService', () => {
           provide: getRepositoryToken(CatsEntity),
           useClass: CatsRepositoryMock,
         },
-        {
-          provide: Logger,
-          useValue: { log: jest.fn() },
-        },
+        
       ],
       controllers: [CatsController],
+      imports: [CacheModule.register()]
     }).compile();
 
     service = module.get<CatsService>(CatsService);
     mock = module.get(getRepositoryToken(CatsEntity));
-    logger = module.get(Logger);
+    cache = module.get(CACHE_MANAGER);
+    
   });
 
   describe('should crud operations be exist', () => {

@@ -16,14 +16,17 @@ import { CatsService } from './cats.service';
 import { CatsEntity } from './entities/cats.entity';
 import { ChangeCatDto } from './dto/change-cat.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('cats')
 export class CatsController {
-  constructor(private service: CatsService) {}
+  constructor(
+    private service: CatsService
+  ) {}
 
   @UseInterceptors(CacheInterceptor)
   @CacheKey('cats')
+  @CacheTTL(30)
   @Get()
   async getAllCats(): Promise<CatsEntity[]> {
     return this.service.getAllCats();

@@ -15,10 +15,12 @@ CREATE TABLE cats_entity (
     vacant BOOLEAN NOT NULL,
     coast INTEGER NOT NULL
 );
+CREATE TYPE Role AS ENUM ('Admin', 'User');
 CREATE TABLE auth (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     login VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    role Role NOT NULL
 );\n`;
 
 const main = async () => {

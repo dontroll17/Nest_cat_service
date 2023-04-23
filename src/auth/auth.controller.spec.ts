@@ -63,6 +63,7 @@ describe('AuthController', () => {
       const res = await controller.login({
         login: 'cat',
         password: '12345678',
+        role: 'User'
       });
       expect(res).toEqual({ accessToken: expect.any(String) });
     });
@@ -71,6 +72,7 @@ describe('AuthController', () => {
       const res = await controller.register({
         login: 'tester',
         password: '12345678',
+        role: 'Admin'
       });
       expect(res).toEqual({ accessToken: expect.any(String) });
     });
