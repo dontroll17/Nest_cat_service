@@ -9,18 +9,20 @@ import {
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { CatsService } from './cats.service';
 import { CatsEntity } from './entities/cats.entity';
 import { ChangeCatDto } from './dto/change-cat.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CacheKey } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 
 @Controller('cats')
 export class CatsController {
   constructor(private service: CatsService) {}
 
+  @UseInterceptors(CacheInterceptor)
   @CacheKey('cats')
   @Get()
   async getAllCats(): Promise<CatsEntity[]> {
