@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import 'dotenv/config';
 import { AuthEntity } from './auth/entities/auth.entitty';
 import { RequestLoggerMiddleware } from './middleware/logger.middlewars';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -21,6 +22,9 @@ import { RequestLoggerMiddleware } from './middleware/logger.middlewars';
       synchronize: false,
     }),
     AuthModule,
+    CacheModule.register({
+      isGlobal: true
+    })
   ],
   controllers: [],
   providers: [],

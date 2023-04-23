@@ -15,11 +15,13 @@ import { CatsService } from './cats.service';
 import { CatsEntity } from './entities/cats.entity';
 import { ChangeCatDto } from './dto/change-cat.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { CacheKey } from '@nestjs/cache-manager';
 
 @Controller('cats')
 export class CatsController {
   constructor(private service: CatsService) {}
 
+  @CacheKey('cats')
   @Get()
   async getAllCats(): Promise<CatsEntity[]> {
     return this.service.getAllCats();
