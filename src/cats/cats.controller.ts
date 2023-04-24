@@ -18,7 +18,7 @@ import { CatsEntity } from './entities/cats.entity';
 import { ChangeCatDto } from './dto/change-cat.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('cats')
 export class CatsController {
