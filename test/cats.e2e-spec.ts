@@ -48,7 +48,7 @@ beforeAll(async () => {
   cache = module.get(CACHE_MANAGER);
   await app.init();
 
-  token = await authService.login({ login: 'tester', password: '12345678', role: 'Admin' });
+  token = await authService.login({ login: 'test', password: '12345678', role: 'Admin' });
 });
 
 afterAll(async () => {

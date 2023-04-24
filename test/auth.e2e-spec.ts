@@ -37,20 +37,35 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  await authRepo.query(`DELETE FROM auth where login = 'test user';`);
+  await authRepo.query(`DELETE FROM auth where login = 'tester';`);
 });
 
 describe('should POST /cats', () => {
   it('should return a new created user', async () => {
-    const { body } = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post('/auth/register')
       .send({
-        login: 'test user',
+        login: 'tester',
         password: '12345678',
         role: 'Admin'
       })
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
       .expect(201);
+  });
+
+  it('should return token', async () => {
+    const { body } = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        login: 'test',
+        password: '12345678',
+        role: 'Admin'
+      })
+      .set('Accept', 'applization/json')
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+      expect(body).toEqual({accessToken: expect.any(String)})
   });
 });
