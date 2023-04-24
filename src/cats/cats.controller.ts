@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  SetMetadata,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import { CatsEntity } from './entities/cats.entity';
 import { ChangeCatDto } from './dto/change-cat.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @Controller('cats')
 export class CatsController {
@@ -32,13 +34,16 @@ export class CatsController {
     return this.service.getAllCats();
   }
 
-  @UseGuards(AuthGuard('jwt'))
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @SetMetadata('roles', ['Admin', 'User'])
   @Post()
   async addCat(@Body() dto: CreateCatDto): Promise<CatsEntity> {
     return this.service.createCat(dto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @SetMetadata('roles', ['Admin'])
   @Delete(':id')
   @HttpCode(204)
   async removeCat(
@@ -53,7 +58,8 @@ export class CatsController {
     return await this.service.removeCat(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @SetMetadata('roles', ['Admin'])
   @Put(':id')
   async changeCat(
     @Param(
