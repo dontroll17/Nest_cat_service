@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import 'dotenv/config';
 import { AuthEntity } from './auth/entities/auth.entitty';
 import { RequestLoggerMiddleware } from './middleware/logger.middlewars';
+import { FilesModule } from './files/files.module';
+import { FilesEntity } from './files/entities/files.entity';
 
 @Module({
   imports: [
@@ -17,10 +19,11 @@ import { RequestLoggerMiddleware } from './middleware/logger.middlewars';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASS,
       database: process.env.DB_DATABASE,
-      entities: [CatsEntity, AuthEntity],
+      entities: [CatsEntity, AuthEntity, FilesEntity],
       synchronize: false,
     }),
-    AuthModule
+    AuthModule,
+    FilesModule
   ],
   controllers: [],
   providers: [],

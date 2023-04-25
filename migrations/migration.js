@@ -21,6 +21,10 @@ CREATE TABLE auth (
     login VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role Role NOT NULL
+);
+CREATE TABLE files (
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL UNIQUE
 );\n`;
 
 const main = async () => {
