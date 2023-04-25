@@ -9,6 +9,7 @@ export class AuthController {
   constructor(private service: AuthService) {}
 
   @Post('login')
+  
   @HttpCode(200)
   async login(@Body() userDto: UserDto): Promise<JWT> {
     return await this.service.login(userDto);
