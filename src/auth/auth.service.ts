@@ -64,6 +64,9 @@ export class AuthService {
   }
 
   async login(dto: UserDto) {
+    if(Object.keys(dto).length < 3) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST)
+    }
     const user = await this.validateUser(dto);
     return this.genToken(user);
   }

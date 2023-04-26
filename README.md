@@ -23,6 +23,7 @@ $ npm ci
 <p>db create in docker(create user and database)</p>
 
 ```bash
+$ docker run --name {Postgres name} -p {postgres_port}:{port} -e POSTGRES_PASSWORD={db_password} -d {db_name}
 $ npm run migration
 $ cd migrations
 $ docker exec -i ${container hash} psql -U ${postgres user} -d{database} < data.sql

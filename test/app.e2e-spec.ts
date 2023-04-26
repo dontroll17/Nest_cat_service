@@ -36,4 +36,14 @@ describe('Negative', () => {
 
         expect(req.text).toBe('{"statusCode":404,"message":"Cannot GET /not/exist","error":"Not Found"}')
     });
+
+    it('should return 400 from /login route', async () => {
+        const badRequest = {};
+        const req = await request(app.getHttpServer())
+            .post('/auth/login')
+            .send(badRequest)
+            .expect(400)
+        
+        expect(req.text).toBe('{"statusCode":400,"message":"Bad request"}');
+    });
 });
