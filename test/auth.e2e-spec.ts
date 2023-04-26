@@ -37,7 +37,7 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  await authRepo.query(`DELETE FROM auth where login = 'tester';`);
+  await authRepo.query(`DELETE FROM auth;`);
 });
 
 describe('should POST /cats', () => {
@@ -45,38 +45,33 @@ describe('should POST /cats', () => {
     const sendData = {
       login: 'tester',
       password: '12345678',
-      role: 'Admin'
-    }
-    try {
-      await request(app.getHttpServer())
-        .post('/auth/register')
-        .send(sendData)
-        .set('Accept', 'applization/json')
-        .expect('Content-Type', /json/)
-        .expect(201);
-    } catch (e) {
-      console.error(e);
-    }
-
+      role: 'Admin',
+    };
+    await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(sendData)
+      .set('Accept', 'applization/json')
+      .expect('Content-Type', /json/)
+      .expect(201);
   });
 
   it('should return token', async () => {
     const sendData = {
       login: 'tester',
       password: '12345678',
-      role: 'Admin'
-    }
-    try {
-      const { body } = await request(app.getHttpServer())
-        .post('/auth/login')
-        .send(sendData)
-        .set('Accept', 'applization/json')
-        .expect('Content-Type', /json/)
-        .expect(200);
+      role: 'Admin',
+    };
+    await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(sendData)
+      .set('Accept', 'applization/json');
+    const { body } = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send(sendData)
+      .set('Accept', 'applization/json')
+      .expect('Content-Type', /json/)
+      .expect(200);
 
-      expect(body).toEqual({accessToken: expect.any(String)});
-    } catch(e) {
-      console.error(e);
-    }
+    expect(body).toEqual({ accessToken: expect.any(String) });
   });
 });

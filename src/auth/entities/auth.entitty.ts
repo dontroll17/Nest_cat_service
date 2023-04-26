@@ -15,7 +15,7 @@ export class AuthEntity {
 
   @Column({
     type: 'enum',
-    enum: ['Admin', 'User']
+    enum: ['Admin', 'User'],
   })
-  role: 'Admin' | 'User'
+  role: 'Admin' | 'User';
 }

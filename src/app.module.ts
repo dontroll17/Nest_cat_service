@@ -23,7 +23,7 @@ import { FilesEntity } from './files/entities/files.entity';
       synchronize: false,
     }),
     AuthModule,
-    FilesModule
+    FilesModule,
   ],
   controllers: [],
   providers: [],

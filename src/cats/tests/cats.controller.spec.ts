@@ -7,7 +7,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { CatsRepositoryMock } from './mock/FakeRepo';
 import { fakeCat } from './test-data/fakeCats';
 import { fakeCatEntity } from './test-data/fakeEntity';
-import { CACHE_MANAGER, CacheModule} from '@nestjs/cache-manager';
+import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 
 describe('CatsController', () => {
   let controller: CatsController;
@@ -22,9 +22,9 @@ describe('CatsController', () => {
         {
           provide: getRepositoryToken(CatsEntity),
           useClass: CatsRepositoryMock,
-        }
+        },
       ],
-      imports: [CacheModule.register()]
+      imports: [CacheModule.register()],
     }).compile();
 
     controller = module.get<CatsController>(CatsController);
@@ -52,45 +52,33 @@ describe('CatsController', () => {
 
   describe('should test controller methods', () => {
     it('should test get controller', async () => {
-      try {
-        const data = await controller.getAllCats();
-        expect(data).toStrictEqual([]);
-        expect(data).toHaveLength(0);
-      } catch (e) {
-        console.error(e);
-      }   
+      const data = await controller.getAllCats();
+      expect(data).toStrictEqual([]);
+      expect(data).toHaveLength(0);
     });
 
     it('should create new cat', async () => {
-      try {
-        const cat = await controller.addCat(fakeCat);
-        expect(cat).toEqual(fakeCatEntity);
-  
-        const data = await controller.getAllCats();
-        expect(data).toHaveLength(1);
-  
-        const newCat = data.find((i) => i.id === fakeCatEntity.id);
-        expect(newCat).toBeDefined();
-      } catch (e) {
-        console.error(e);
-      }
+      const cat = await controller.addCat(fakeCat);
+      expect(cat).toEqual(fakeCatEntity);
+
+      const data = await controller.getAllCats();
+      expect(data).toHaveLength(1);
+
+      const newCat = data.find((i) => i.id === fakeCatEntity.id);
+      expect(newCat).toBeDefined();
     });
 
     it('should remove cat', async () => {
-      try {
-        await mock.save(fakeCatEntity);
+      await mock.save(fakeCatEntity);
 
-        const beforeData = await controller.getAllCats();
-        expect(beforeData).toHaveLength(1);
-        const cat = beforeData.find((i) => i.id === fakeCatEntity.id);
-        expect(cat).toBeDefined();
+      const beforeData = await controller.getAllCats();
+      expect(beforeData).toHaveLength(1);
+      const cat = beforeData.find((i) => i.id === fakeCatEntity.id);
+      expect(cat).toBeDefined();
 
-        await controller.removeCat(fakeCatEntity.id);
-        const afterData = await controller.getAllCats();
-        expect(afterData).toHaveLength(0);
-      } catch (e) {
-        console.error(e);
-      }
+      await controller.removeCat(fakeCatEntity.id);
+      const afterData = await controller.getAllCats();
+      expect(afterData).toHaveLength(0);
     });
 
     it('should change cat data', async () => {
@@ -99,21 +87,17 @@ describe('CatsController', () => {
         role: 'new role',
         vacant: true,
         coast: 500,
-      }
-      try {
-        await mock.save(fakeCatEntity);
+      };
+      await mock.save(fakeCatEntity);
 
-        const change = await controller.changeCat(fakeCatEntity.id, fakeCat );
-        expect(change).toEqual({
-          id: expect.any(String),
-          nick: 'new nick',
-          role: 'new role',
-          vacant: true,
-          coast: 500,
-        });
-      } catch(e) {
-        console.error(e);
-      }
+      const change = await controller.changeCat(fakeCatEntity.id, fakeCat);
+      expect(change).toEqual({
+        id: expect.any(String),
+        nick: 'new nick',
+        role: 'new role',
+        vacant: true,
+        coast: 500,
+      });
     });
   });
 });

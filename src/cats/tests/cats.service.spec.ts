@@ -22,16 +22,14 @@ describe('CatsService', () => {
           provide: getRepositoryToken(CatsEntity),
           useClass: CatsRepositoryMock,
         },
-        
       ],
       controllers: [CatsController],
-      imports: [CacheModule.register()]
+      imports: [CacheModule.register()],
     }).compile();
 
     service = module.get<CatsService>(CatsService);
     mock = module.get(getRepositoryToken(CatsEntity));
     cache = module.get(CACHE_MANAGER);
-    
   });
 
   describe('should crud operations be exist', () => {
@@ -54,50 +52,34 @@ describe('CatsService', () => {
 
   describe('should test get operation', () => {
     it('should return all cats', async () => {
-      try {
-        const cats = await service.getAllCats();
-        expect(cats).toStrictEqual([]);
-      } catch(e) {
-        console.error(e);
-      } 
+      const cats = await service.getAllCats();
+      expect(cats).toStrictEqual([]);
     });
   });
 
   describe('should test add operation', () => {
     it('should add new cat', async () => {
-      try {
-        const newCat = await service.createCat(fakeCat);
-        const data = await service.getAllCats();
-        expect(newCat).toEqual(fakeCatEntity);
-        expect(data).toHaveLength(1);
-      } catch(e) {
-        console.error(e);
-      }
+      const newCat = await service.createCat(fakeCat);
+      const data = await service.getAllCats();
+      expect(newCat).toEqual(fakeCatEntity);
+      expect(data).toHaveLength(1);
     });
 
     it('shouldn`t add new cat', async () => {
-      try {
-        //@ts-ignore
-        const cat = await service.createCat(badCat);
-        const data = await service.getAllCats();
-        expect(cat).toBe(undefined);
-        expect(data).toHaveLength(0);
-      } catch(e) {
-        console.error(e);
-      }
+      //@ts-ignore
+      const cat = await service.createCat(badCat);
+      const data = await service.getAllCats();
+      expect(cat).toBe(undefined);
+      expect(data).toHaveLength(0);
     });
   });
 
   describe('should test delete operation', () => {
     it('should remove cat', async () => {
-      try {
-        await mock.save(fakeCatEntity);
-        await service.removeCat(fakeCatEntity.id);
-        //@ts-ignore
-        expect(mock.base).toHaveLength(0);
-      } catch(e) {
-        console.error(e);
-      }
+      await mock.save(fakeCatEntity);
+      await service.removeCat(fakeCatEntity.id);
+      //@ts-ignore
+      expect(mock.base).toHaveLength(0);
     });
   });
 
@@ -108,21 +90,17 @@ describe('CatsService', () => {
         role: 'new role',
         vacant: true,
         coast: 500,
-      }
-      try {
-        await mock.save(fakeCatEntity);
+      };
+      await mock.save(fakeCatEntity);
 
-        const change = await service.changeCat(fakeCatEntity.id, fakeCat);
-        expect(change).toEqual({
-          id: expect.any(String),
-          nick: 'new nick',
-          role: 'new role',
-          vacant: true,
-          coast: 500,
-        });
-      } catch(e) {
-        console.error(e);
-      }
+      const change = await service.changeCat(fakeCatEntity.id, fakeCat);
+      expect(change).toEqual({
+        id: expect.any(String),
+        nick: 'new nick',
+        role: 'new role',
+        vacant: true,
+        coast: 500,
+      });
     });
   });
 });

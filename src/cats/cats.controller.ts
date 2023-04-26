@@ -22,9 +22,7 @@ import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('cats')
 export class CatsController {
-  constructor(
-    private service: CatsService
-  ) {}
+  constructor(private service: CatsService) {}
 
   @UseInterceptors(CacheInterceptor)
   @CacheKey('cats')
@@ -33,7 +31,6 @@ export class CatsController {
   async getAllCats(): Promise<CatsEntity[]> {
     return this.service.getAllCats();
   }
-
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @SetMetadata('roles', ['Admin', 'User'])

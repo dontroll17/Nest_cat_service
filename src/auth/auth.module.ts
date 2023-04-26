@@ -11,10 +11,14 @@ import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, {
-    provide: APP_GUARD,
-    useClass: ThrottlerGuard
-  }],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
   imports: [
     TypeOrmModule.forFeature([AuthEntity]),
     JwtModule.register({
@@ -25,8 +29,8 @@ import { APP_GUARD } from '@nestjs/core';
     }),
     ThrottlerModule.forRoot({
       ttl: 60,
-      limit: 3
-    })
+      limit: 3,
+    }),
   ],
   exports: [AuthModule],
 })

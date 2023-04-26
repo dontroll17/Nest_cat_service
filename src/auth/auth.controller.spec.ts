@@ -59,30 +59,22 @@ describe('AuthController', () => {
 
   describe('should test beheivor methods', () => {
     it('should test login controller', async () => {
-      try {
-        jest.spyOn(bcrypt, 'compare').mockImplementation(() => true);
-        const res = await controller.login({
-          login: 'cat',
-          password: '12345678',
-          role: 'User'
-        });
-        expect(res).toEqual({ accessToken: expect.any(String) });
-      } catch(e) {
-        console.error(e);
-      }
+      jest.spyOn(bcrypt, 'compare').mockImplementation(() => true);
+      const res = await controller.login({
+        login: 'cat',
+        password: '12345678',
+        role: 'User',
+      });
+      expect(res).toEqual({ accessToken: expect.any(String) });
     });
 
     it('should test register controller', async () => {
-      try {
-        const res = await controller.register({
-          login: 'tester',
-          password: '12345678',
-          role: 'Admin'
-        });
-        expect(res).toEqual({ accessToken: expect.any(String) });
-      } catch(e) {
-        console.error(e);
-      }
+      const res = await controller.register({
+        login: 'tester',
+        password: '12345678',
+        role: 'Admin',
+      });
+      expect(res).toEqual({ accessToken: expect.any(String) });
     });
   });
 });

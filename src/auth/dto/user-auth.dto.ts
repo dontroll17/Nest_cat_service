@@ -11,6 +11,6 @@ export class UserDto {
   password: string;
 
   @IsNotEmpty()
-  @IsEnum({Admin: 'Admin', User: 'User'})
-  role: 'Admin' | 'User'
+  @IsEnum({ Admin: 'Admin', User: 'User' })
+  role: 'Admin' | 'User';
 }

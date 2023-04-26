@@ -36,7 +36,7 @@ beforeAll(async () => {
         synchronize: false,
       }),
       TypeOrmModule.forFeature([AuthEntity]),
-      CacheModule.register()
+      CacheModule.register(),
     ],
     providers: [AuthService, JwtService],
   }).compile();
@@ -48,10 +48,15 @@ beforeAll(async () => {
   cache = module.get(CACHE_MANAGER);
   await app.init();
 
-  token = await authService.login({ login: 'test', password: '12345678', role: 'Admin' });
+  token = await authService.register({
+    login: 'test',
+    password: '12345678',
+    role: 'Admin',
+  });
 });
 
 afterAll(async () => {
+  await repository.query('DELETE FROM auth;');
   await app.close();
 });
 
@@ -132,38 +137,34 @@ describe('should POST /cats', () => {
 
 describe('should DELETE /cats/:id', () => {
   it('should remove cat', async () => {
-    try {
-      await repository.save([
-        { nick: 'test', role: 'tester', vacant: true, coast: 500 },
-        { nick: 'test2', role: 'main tester', vacant: true, coast: 500 },
-      ]);
-  
-      const { body } = await request(app.getHttpServer())
-        .get('/cats')
-        .set('Accept', 'applization/json');
-  
-      const tester = body.find((i) => i.role === 'tester');
-      expect(tester).toBeDefined();
-  
-      await request(app.getHttpServer())
-        .delete(`/cats/${tester.id}`)
-        .set({ Authorization: 'Bearer ' + token.accessToken })
-        .expect(204);
-  
-      const allData = await repository.find();
-      expect(allData).toHaveLength(1);
-      expect(allData).toEqual([
-        {
-          id: expect.any(String),
-          nick: 'test2',
-          role: 'main tester',
-          vacant: true,
-          coast: 500,
-        },
-      ]);
-    } catch(e) {
-      console.error(e);
-    }
+    await repository.save([
+      { nick: 'test', role: 'tester', vacant: true, coast: 500 },
+      { nick: 'test2', role: 'main tester', vacant: true, coast: 500 },
+    ]);
+
+    const { body } = await request(app.getHttpServer())
+      .get('/cats')
+      .set('Accept', 'applization/json');
+
+    const tester = body.find((i) => i.role === 'tester');
+    expect(tester).toBeDefined();
+
+    await request(app.getHttpServer())
+      .delete(`/cats/${tester.id}`)
+      .set({ Authorization: 'Bearer ' + token.accessToken })
+      .expect(204);
+
+    const allData = await repository.find();
+    expect(allData).toHaveLength(1);
+    expect(allData).toEqual([
+      {
+        id: expect.any(String),
+        nick: 'test2',
+        role: 'main tester',
+        vacant: true,
+        coast: 500,
+      },
+    ]);
   });
 });
 
@@ -174,36 +175,32 @@ describe('should PUT /cats/:id', () => {
       role: 'test cat',
       vacant: true,
       coast: 500,
-    }
-    try {
-      await repository.save(testData);
-      const cat = await repository.findOne({ where: { nick: 'test cat' } });
-  
-      await request(app.getHttpServer())
-        .put(`/cats/${cat.id}`)
-        .send({
-          nick: 'test',
-          role: 'tester',
-          vacant: true,
-          coast: 500,
-        })
-        .set({ Authorization: 'Bearer ' + token.accessToken })
-        .set('Accept', 'applization/json')
-        .expect('Content-Type', /json/)
-        .expect(200);
-  
-      const base = await repository.find();
-  
-      expect(base).toHaveLength(1);
-      expect(base[0]).toEqual({
-        id: expect.any(String),
+    };
+    await repository.save(testData);
+    const cat = await repository.findOne({ where: { nick: 'test cat' } });
+
+    await request(app.getHttpServer())
+      .put(`/cats/${cat.id}`)
+      .send({
         nick: 'test',
         role: 'tester',
         vacant: true,
         coast: 500,
-      });
-    } catch(e) {
-      console.error(e);
-    }
+      })
+      .set({ Authorization: 'Bearer ' + token.accessToken })
+      .set('Accept', 'applization/json')
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    const base = await repository.find();
+
+    expect(base).toHaveLength(1);
+    expect(base[0]).toEqual({
+      id: expect.any(String),
+      nick: 'test',
+      role: 'tester',
+      vacant: true,
+      coast: 500,
+    });
   });
 });

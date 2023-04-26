@@ -10,7 +10,6 @@ describe('FilesController', () => {
   let service: FilesService;
   let repository: Repository<FilesEntity>;
 
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FilesController],
@@ -22,12 +21,12 @@ describe('FilesController', () => {
             save: (entity) => {
               return Promise.resolve({
                 id: 'some id',
-                filename: entity.filename
-              })
-            }
-          }
-        }
-      ]
+                filename: entity.filename,
+              });
+            },
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<FilesController>(FilesController);
@@ -39,21 +38,17 @@ describe('FilesController', () => {
     expect(controller.upload).toBeDefined();
   });
 
-  it("should save file on serve", async () => {
+  it('should save file on serve', async () => {
     const fileMock = {
       filedname: 'file',
       originalname: 'test-file.jpg',
       encoding: '7bit',
       mimetype: 'image/jpeg',
       size: 1024,
-      buffer: Buffer.from('test-content')
+      buffer: Buffer.from('test-content'),
     };
 
-    try {
-      const req = await controller.upload(fileMock);
-      console.log(req);
-    } catch(e) {
-      console.error(e);
-    }  
+    const req = await controller.upload(fileMock);
+    console.log(req);
   });
 });

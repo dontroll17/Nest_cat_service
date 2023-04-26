@@ -8,9 +8,6 @@ import { CacheModule } from '@nestjs/cache-manager';
 @Module({
   controllers: [CatsController],
   providers: [CatsService],
-  imports: [
-    TypeOrmModule.forFeature([CatsEntity]),
-    CacheModule.register()
-  ],
+  imports: [TypeOrmModule.forFeature([CatsEntity]), CacheModule.register()],
 })
 export class CatsModule {}
