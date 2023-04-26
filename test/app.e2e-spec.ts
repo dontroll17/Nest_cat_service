@@ -13,16 +13,27 @@ beforeAll(async () => {
     }).compile();
 
     app = module.createNestApplication();
+    await app.init();
 });
 
 afterAll(() => {
     app.close();
 });
 
+describe('Positive', () => {
+    it('should return 200 for exist route', async () => {
+        await request(app.getHttpServer())
+            .get('/cats')
+            .expect(200)
+    });
+});
+
 describe('Negative', () => {
     it('should return 404 fron non-exist route', async () => {
-        await request(app.getHttpServer())
+        const req = await request(app.getHttpServer())
             .get('/not/exist')
             .expect(404);
+
+        expect(req.text).toBe('{"statusCode":404,"message":"Cannot GET /not/exist","error":"Not Found"}')
     });
 });
