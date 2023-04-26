@@ -18,30 +18,24 @@ afterAll(() => {
   app.close();
 });
 
-describe('Positive', () => {
-  it('should return 200 for exist route', async () => {
-    await request(app.getHttpServer()).get('/cats').expect(200);
-  });
-});
-
-describe('Negative', () => {
+describe('Negative tests', () => {
   it('should return 404 fron non-exist route', async () => {
-    const req = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer())
       .get('/not/exist')
       .expect(404);
 
-    expect(req.text).toBe(
+    expect(res.text).toBe(
       '{"statusCode":404,"message":"Cannot GET /not/exist","error":"Not Found"}',
     );
   });
 
   it('should return 400 from /login route', async () => {
     const badRequest = {};
-    const req = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send(badRequest)
       .expect(400);
 
-    expect(req.text).toBe('{"statusCode":400,"message":"Bad request"}');
+    expect(res.text).toBe('{"statusCode":400,"message":"Bad request"}');
   });
 });

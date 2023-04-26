@@ -96,7 +96,7 @@ describe('should GET /cats', () => {
   });
 });
 
-describe('should POST /cats', () => {
+describe('route POST /cats', () => {
   it('should return a new created cat', async () => {
     const { body } = await request(app.getHttpServer())
       .post('/cats')
