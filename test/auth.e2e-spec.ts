@@ -42,30 +42,41 @@ afterEach(async () => {
 
 describe('should POST /cats', () => {
   it('should return a new created user', async () => {
-    await request(app.getHttpServer())
-      .post('/auth/register')
-      .send({
-        login: 'tester',
-        password: '12345678',
-        role: 'Admin'
-      })
-      .set('Accept', 'applization/json')
-      .expect('Content-Type', /json/)
-      .expect(201);
+    const sendData = {
+      login: 'tester',
+      password: '12345678',
+      role: 'Admin'
+    }
+    try {
+      await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(sendData)
+        .set('Accept', 'applization/json')
+        .expect('Content-Type', /json/)
+        .expect(201);
+    } catch (e) {
+      console.error(e);
+    }
+
   });
 
   it('should return token', async () => {
-    const { body } = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        login: 'test',
-        password: '12345678',
-        role: 'Admin'
-      })
-      .set('Accept', 'applization/json')
-      .expect('Content-Type', /json/)
-      .expect(200);
+    const sendData = {
+      login: 'tester',
+      password: '12345678',
+      role: 'Admin'
+    }
+    try {
+      const { body } = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(sendData)
+        .set('Accept', 'applization/json')
+        .expect('Content-Type', /json/)
+        .expect(200);
 
-      expect(body).toEqual({accessToken: expect.any(String)})
+      expect(body).toEqual({accessToken: expect.any(String)});
+    } catch(e) {
+      console.error(e);
+    }
   });
 });

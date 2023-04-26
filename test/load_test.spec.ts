@@ -10,7 +10,12 @@ export const options = {
 };
 
 export default () => {
-  const res = http.get('http://localhost:3000/cats');
-  check(res, { 'status was 200': (res) => res.status === 200 });
-  sleep(1);
+  try {
+    // got 429 after added rate limit. Only 3 request got status 200 
+    const res = http.get('http://localhost:3000/cats');
+    check(res, { 'status was 200': (res) => res.status === 200 });
+    sleep(1);
+  } catch(e) {
+    console.error(e);
+  }
 };

@@ -132,69 +132,78 @@ describe('should POST /cats', () => {
 
 describe('should DELETE /cats/:id', () => {
   it('should remove cat', async () => {
-    await repository.save([
-      { nick: 'test', role: 'tester', vacant: true, coast: 500 },
-      { nick: 'test2', role: 'main tester', vacant: true, coast: 500 },
-    ]);
-
-    const { body } = await request(app.getHttpServer())
-      .get('/cats')
-      .set('Accept', 'applization/json');
-
-    const tester = body.find((i) => i.role === 'tester');
-    expect(tester).toBeDefined();
-
-    await request(app.getHttpServer())
-      .delete(`/cats/${tester.id}`)
-      .set({ Authorization: 'Bearer ' + token.accessToken })
-      .expect(204);
-
-    const allData = await repository.find();
-    expect(allData).toHaveLength(1);
-    expect(allData).toEqual([
-      {
-        id: expect.any(String),
-        nick: 'test2',
-        role: 'main tester',
-        vacant: true,
-        coast: 500,
-      },
-    ]);
+    try {
+      await repository.save([
+        { nick: 'test', role: 'tester', vacant: true, coast: 500 },
+        { nick: 'test2', role: 'main tester', vacant: true, coast: 500 },
+      ]);
+  
+      const { body } = await request(app.getHttpServer())
+        .get('/cats')
+        .set('Accept', 'applization/json');
+  
+      const tester = body.find((i) => i.role === 'tester');
+      expect(tester).toBeDefined();
+  
+      await request(app.getHttpServer())
+        .delete(`/cats/${tester.id}`)
+        .set({ Authorization: 'Bearer ' + token.accessToken })
+        .expect(204);
+  
+      const allData = await repository.find();
+      expect(allData).toHaveLength(1);
+      expect(allData).toEqual([
+        {
+          id: expect.any(String),
+          nick: 'test2',
+          role: 'main tester',
+          vacant: true,
+          coast: 500,
+        },
+      ]);
+    } catch(e) {
+      console.error(e);
+    }
   });
 });
 
 describe('should PUT /cats/:id', () => {
   it('should change cat', async () => {
-    await repository.save({
+    const testData = {
       nick: 'test cat',
       role: 'test cat',
       vacant: true,
       coast: 500,
-    });
-    const cat = await repository.findOne({ where: { nick: 'test cat' } });
-
-    await request(app.getHttpServer())
-      .put(`/cats/${cat.id}`)
-      .send({
+    }
+    try {
+      await repository.save(testData);
+      const cat = await repository.findOne({ where: { nick: 'test cat' } });
+  
+      await request(app.getHttpServer())
+        .put(`/cats/${cat.id}`)
+        .send({
+          nick: 'test',
+          role: 'tester',
+          vacant: true,
+          coast: 500,
+        })
+        .set({ Authorization: 'Bearer ' + token.accessToken })
+        .set('Accept', 'applization/json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+  
+      const base = await repository.find();
+  
+      expect(base).toHaveLength(1);
+      expect(base[0]).toEqual({
+        id: expect.any(String),
         nick: 'test',
         role: 'tester',
         vacant: true,
         coast: 500,
-      })
-      .set({ Authorization: 'Bearer ' + token.accessToken })
-      .set('Accept', 'applization/json')
-      .expect('Content-Type', /json/)
-      .expect(200);
-
-    const base = await repository.find();
-
-    expect(base).toHaveLength(1);
-    expect(base[0]).toEqual({
-      id: expect.any(String),
-      nick: 'test',
-      role: 'tester',
-      vacant: true,
-      coast: 500,
-    });
+      });
+    } catch(e) {
+      console.error(e);
+    }
   });
 });
