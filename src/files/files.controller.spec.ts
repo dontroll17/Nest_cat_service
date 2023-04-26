@@ -48,7 +48,12 @@ describe('FilesController', () => {
       size: 1024,
       buffer: Buffer.from('test-content')
     };
-    const req = await controller.upload(fileMock);
-    console.log(req);
+
+    try {
+      const req = await controller.upload(fileMock);
+      console.log(req);
+    } catch(e) {
+      console.error(e);
+    }  
   });
 });

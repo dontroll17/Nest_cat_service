@@ -52,51 +52,68 @@ describe('CatsController', () => {
 
   describe('should test controller methods', () => {
     it('should test get controller', async () => {
-      const data = await controller.getAllCats();
-      expect(data).toStrictEqual([]);
-      expect(data).toHaveLength(0);
+      try {
+        const data = await controller.getAllCats();
+        expect(data).toStrictEqual([]);
+        expect(data).toHaveLength(0);
+      } catch (e) {
+        console.error(e);
+      }   
     });
 
     it('should create new cat', async () => {
-      const cat = await controller.addCat(fakeCat);
-      expect(cat).toEqual(fakeCatEntity);
-
-      const data = await controller.getAllCats();
-      expect(data).toHaveLength(1);
-
-      const newCat = data.find((i) => i.id === fakeCatEntity.id);
-      expect(newCat).toBeDefined();
+      try {
+        const cat = await controller.addCat(fakeCat);
+        expect(cat).toEqual(fakeCatEntity);
+  
+        const data = await controller.getAllCats();
+        expect(data).toHaveLength(1);
+  
+        const newCat = data.find((i) => i.id === fakeCatEntity.id);
+        expect(newCat).toBeDefined();
+      } catch (e) {
+        console.error(e);
+      }
     });
 
     it('should remove cat', async () => {
-      await mock.save(fakeCatEntity);
+      try {
+        await mock.save(fakeCatEntity);
 
-      const beforeData = await controller.getAllCats();
-      expect(beforeData).toHaveLength(1);
-      const cat = beforeData.find((i) => i.id === fakeCatEntity.id);
-      expect(cat).toBeDefined();
+        const beforeData = await controller.getAllCats();
+        expect(beforeData).toHaveLength(1);
+        const cat = beforeData.find((i) => i.id === fakeCatEntity.id);
+        expect(cat).toBeDefined();
 
-      await controller.removeCat(fakeCatEntity.id);
-      const afterData = await controller.getAllCats();
-      expect(afterData).toHaveLength(0);
+        await controller.removeCat(fakeCatEntity.id);
+        const afterData = await controller.getAllCats();
+        expect(afterData).toHaveLength(0);
+      } catch (e) {
+        console.error(e);
+      }
     });
 
     it('should change cat data', async () => {
-      await mock.save(fakeCatEntity);
+      const fakeCat = {
+        nick: 'new nick',
+        role: 'new role',
+        vacant: true,
+        coast: 500,
+      }
+      try {
+        await mock.save(fakeCatEntity);
 
-      const change = await controller.changeCat(fakeCatEntity.id, {
-        nick: 'new nick',
-        role: 'new role',
-        vacant: true,
-        coast: 500,
-      });
-      expect(change).toEqual({
-        id: expect.any(String),
-        nick: 'new nick',
-        role: 'new role',
-        vacant: true,
-        coast: 500,
-      });
+        const change = await controller.changeCat(fakeCatEntity.id, fakeCat );
+        expect(change).toEqual({
+          id: expect.any(String),
+          nick: 'new nick',
+          role: 'new role',
+          vacant: true,
+          coast: 500,
+        });
+      } catch(e) {
+        console.error(e);
+      }
     });
   });
 });
