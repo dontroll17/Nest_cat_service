@@ -32,6 +32,11 @@ export class CatsController {
     return this.service.getAllCats();
   }
 
+  @Get(':id')
+  async getById(@Param() id: string): Promise<CatsEntity> {
+    return this.service.getById(id);
+  }
+
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @SetMetadata('roles', ['Admin', 'User'])
   @Post()

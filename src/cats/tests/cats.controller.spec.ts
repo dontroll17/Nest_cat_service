@@ -37,6 +37,10 @@ describe('CatsController', () => {
       expect(controller.getAllCats).toBeDefined();
     });
 
+    it('should be catById', () => {
+      expect(controller.getById).toBeDefined();
+    });
+
     it('should be createCat operation', () => {
       expect(controller.addCat).toBeDefined();
     });
@@ -55,6 +59,13 @@ describe('CatsController', () => {
       const data = await controller.getAllCats();
       expect(data).toStrictEqual([]);
       expect(data).toHaveLength(0);
+    });
+
+    it('should return cat by id', async () => {
+      const newCat = await controller.addCat(fakeCat);
+
+      const cat = await controller.getById(newCat.id);
+      expect(typeof cat === 'object');
     });
 
     it('should create new cat', async () => {

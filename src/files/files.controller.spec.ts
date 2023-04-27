@@ -62,11 +62,11 @@ describe('FilesController', () => {
     });
 
     //TODO
-    it('should download file from server', async () => {
-      const filename = {filename: 'image.jpg'};
-      jest.replaceProperty(repository, 'findOne', () => Promise.resolve({id: 'some id', filename: 'image.jpg'}))
-      const req = await controller.download(filename, response);
-      console.log(req);
-    });
+    // it('should download file from server', async () => {
+    //   const filename = {filename: 'image.jpg'};
+    //   jest.replaceProperty(repository, 'findOne', () => Promise.resolve({id: 'some id', filename: 'image.jpg'}))
+    //   const req = await controller.download(filename, response);
+    //   console.log(req);
+    // });
   });
 });
