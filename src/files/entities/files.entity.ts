@@ -7,4 +7,13 @@ export class FilesEntity {
 
   @Column()
   filename: string;
+
+  @Column()
+  originalname: string;
+
+  @Column()
+  encoding: string;
+
+  @Column()
+  size: number;
 }

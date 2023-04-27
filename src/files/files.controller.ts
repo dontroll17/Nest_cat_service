@@ -3,6 +3,7 @@ import {
   Controller,
   Post,
   Res,
+  StreamableFile,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -10,6 +11,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
 import { FileNameDto } from './dto/file-name.dto';
 import { Response } from 'express';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
 @Controller('files')
 export class FilesController {
@@ -24,9 +27,14 @@ export class FilesController {
   @Post('download')
   async download(
     @Body() dto: FileNameDto,
-    @Res() response: Response  
+    @Res({ passthrough: true }) response: Response  
   ) {
-    const file = await this.service.download(dto);
-    response.send(file);
+    const filename = await this.service.download(dto);
+    const file = createReadStream(join('files', filename.id));
+    response.set({
+      'Content-Type': 'application/json',
+      'Content-Disposition': `attachment; filename=${filename.filename}`
+    })
+    return new StreamableFile(file);
   }
 }

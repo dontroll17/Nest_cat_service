@@ -13,7 +13,7 @@ export class FilesService {
   ) {}
 
   async upload(file) {
-
+    console.log(file)
     const req = await this.filesRepository.save({
       filename: file.originalname,
     });
@@ -35,7 +35,6 @@ export class FilesService {
     if(!fileData) {
       throw new HttpException('File not found', HttpStatus.BAD_REQUEST);
     }
-    const file = await readFile(`files/${fileData.id}`);
-    return file;
+    return {...fileData};
   }
 }

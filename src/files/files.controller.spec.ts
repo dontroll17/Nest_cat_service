@@ -50,7 +50,7 @@ describe('FilesController', () => {
   describe('call methods', () => {
     it('should save file on serve', async () => {
       const fileMock = {
-        filedname: 'file',
+        filename: 'file',
         originalname: 'test-file.jpg',
         encoding: '7bit',
         mimetype: 'image/jpeg',
