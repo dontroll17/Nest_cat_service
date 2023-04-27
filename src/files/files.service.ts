@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilesEntity } from './entities/files.entity';
 import { Repository } from 'typeorm';
-import { readFile, writeFile } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import { FileNameDto } from './dto/file-name.dto';
 
 @Injectable()
@@ -13,7 +13,6 @@ export class FilesService {
   ) {}
 
   async upload(file) {
-    console.log(file)
     const req = await this.filesRepository.save({
       filename: file.originalname,
     });

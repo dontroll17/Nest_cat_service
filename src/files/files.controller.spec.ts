@@ -21,10 +21,16 @@ describe('FilesController', () => {
           useValue: {
             save: (entity) => {
               return Promise.resolve({
-                id: 'some id',
+                id: 'uuid',
                 filename: entity.filename,
               });
             },
+            findOne: () => {
+              return Promise.resolve({
+                id: 'uuid',
+                filename: 'image.jpg'
+              });
+            }
           },
         },
       ],
@@ -34,7 +40,15 @@ describe('FilesController', () => {
     service = module.get(FilesService);
     repository = module.get(getRepositoryToken(FilesEntity));
 
-    response = {send: jest.fn()}
+    response = {
+      send: jest.fn(),
+      set: jest.fn((filename) => {
+        return {
+          'Content-Type': 'application/json',
+          'Content-Disposition': `attachment; filename=${filename.filename}`
+        }
+      })
+    }
   });
 
   describe('methods should be defined', () => {
@@ -58,15 +72,21 @@ describe('FilesController', () => {
         buffer: Buffer.from('test-content'),
       };
   
-      await controller.upload(fileMock);
+      const res = await controller.upload(fileMock);
+      expect(res).toEqual({success: 'done'})
     });
 
-    //TODO
-    // it('should download file from server', async () => {
-    //   const filename = {filename: 'image.jpg'};
-    //   jest.replaceProperty(repository, 'findOne', () => Promise.resolve({id: 'some id', filename: 'image.jpg'}))
-    //   const req = await controller.download(filename, response);
-    //   console.log(req);
-    // });
+    it('should download file from server', async () => {
+      const filename = {filename: 'test-file.jpg'};
+      const fileStream = await controller.download(filename, response);
+      let data = '';
+      const readable = fileStream.getStream().on('data', () => {});
+
+      for await(const chunk of readable) {
+        data += chunk
+      }
+
+      expect(data).toEqual('test-content')
+    });
   });
 });
