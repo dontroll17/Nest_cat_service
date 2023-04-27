@@ -4,7 +4,7 @@ import { CatsService } from '../cats.service';
 import { CatsEntity } from '../entities/cats.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CatsRepositoryMock } from './mock/FakeRepo';
+import { CatsRepositoryMock } from './__mock__/FakeRepo';
 import { fakeCat } from './test-data/fakeCats';
 import { fakeCatEntity } from './test-data/fakeEntity';
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
