@@ -15,7 +15,7 @@ export class FilesService {
   async upload(file, login) {
     const req = await this.filesRepository.save({
       filename: file.originalname,
-      deployed: login
+      deployed: login,
     });
     if (!req) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
@@ -29,12 +29,14 @@ export class FilesService {
   }
 
   async download(dto: FileNameDto) {
-    const fileData = await this.filesRepository.findOne({where: {
-      filename: dto.filename
-    }});
-    if(!fileData) {
+    const fileData = await this.filesRepository.findOne({
+      where: {
+        filename: dto.filename,
+      },
+    });
+    if (!fileData) {
       throw new HttpException('File not found', HttpStatus.BAD_REQUEST);
     }
-    return {...fileData};
+    return { ...fileData };
   }
 }

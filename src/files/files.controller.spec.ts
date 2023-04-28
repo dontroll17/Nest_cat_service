@@ -30,9 +30,9 @@ describe('FilesController', () => {
             findOne: () => {
               return Promise.resolve({
                 id: 'uuid',
-                filename: 'image.jpg'
+                filename: 'image.jpg',
               });
-            }
+            },
           },
         },
       ],
@@ -47,22 +47,22 @@ describe('FilesController', () => {
       set: jest.fn((filename) => {
         return {
           'Content-Type': 'application/json',
-          'Content-Disposition': `attachment; filename=${filename.filename}`
-        }
-      })
-    }
+          'Content-Disposition': `attachment; filename=${filename.filename}`,
+        };
+      }),
+    };
 
     requestMock = {
       user: {
         id: '192b78fc-926b-4813-b4f9-277e20172e90',
         login: 'test',
-        password: 'some pass'
-      }
-    }
+        password: 'some pass',
+      },
+    };
   });
 
-  afterAll( async () => {
-    await unlink('files/uuid')
+  afterAll(async () => {
+    await unlink('files/uuid');
   });
 
   describe('methods should be defined', () => {
@@ -85,22 +85,22 @@ describe('FilesController', () => {
         size: 1024,
         buffer: Buffer.from('test-content'),
       };
-  
+
       const res = await controller.upload(fileMock, requestMock);
-      expect(res).toEqual({success: 'done'})
+      expect(res).toEqual({ success: 'done' });
     });
 
     it('should download file from server', async () => {
-      const filename = {filename: 'test-file.jpg'};
+      const filename = { filename: 'test-file.jpg' };
       const fileStream = await controller.download(filename, responseMock);
       let data = '';
       const readable = fileStream.getStream().on('data', () => {});
 
-      for await(const chunk of readable) {
-        data += chunk
+      for await (const chunk of readable) {
+        data += chunk;
       }
 
-      expect(data).toEqual('test-content')
+      expect(data).toEqual('test-content');
     });
   });
 });

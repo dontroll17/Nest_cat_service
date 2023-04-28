@@ -24,25 +24,22 @@ export class FilesController {
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(AuthGuard('jwt'))
   @Post('upload')
-  async upload(
-    @UploadedFile() file,
-    @Req() req  
-  ) {
-    const login = req.user.login
+  async upload(@UploadedFile() file, @Req() req) {
+    const login = req.user.login;
     return await this.service.upload(file, login);
   }
 
   @Post('download')
   async download(
     @Body() dto: FileNameDto,
-    @Res({ passthrough: true }) response: Response  
+    @Res({ passthrough: true }) response: Response,
   ) {
     const filename = await this.service.download(dto);
     const file = createReadStream(join('files', filename.id));
     response.set({
       'Content-Type': 'application/json',
-      'Content-Disposition': `attachment; filename=${filename.filename}`
-    })
+      'Content-Disposition': `attachment; filename=${filename.filename}`,
+    });
     return new StreamableFile(file);
   }
 }
