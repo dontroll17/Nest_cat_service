@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Post,
+  Req,
   Res,
   StreamableFile,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -13,15 +15,21 @@ import { FileNameDto } from './dto/file-name.dto';
 import { Response } from 'express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('files')
 export class FilesController {
   constructor(private service: FilesService) {}
 
   @UseInterceptors(FileInterceptor('file'))
+  @UseGuards(AuthGuard('jwt'))
   @Post('upload')
-  async upload(@UploadedFile() file) {
-    return await this.service.upload(file);
+  async upload(
+    @UploadedFile() file,
+    @Req() req  
+  ) {
+    const login = req.user.login
+    return await this.service.upload(file, login);
   }
 
   @Post('download')

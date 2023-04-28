@@ -9,11 +9,5 @@ export class FilesEntity {
   filename: string;
 
   @Column()
-  originalname: string;
-
-  @Column()
-  encoding: string;
-
-  @Column()
-  size: number;
+  deployed: string;
 }

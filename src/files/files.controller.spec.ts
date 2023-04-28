@@ -4,12 +4,14 @@ import { FilesService } from './files.service';
 import { Repository } from 'typeorm';
 import { FilesEntity } from './entities/files.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { unlink } from 'fs/promises';
 
 describe('FilesController', () => {
   let controller: FilesController;
   let service: FilesService;
   let repository: Repository<FilesEntity>;
-  let response;
+  let responseMock;
+  let requestMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -40,7 +42,7 @@ describe('FilesController', () => {
     service = module.get(FilesService);
     repository = module.get(getRepositoryToken(FilesEntity));
 
-    response = {
+    responseMock = {
       send: jest.fn(),
       set: jest.fn((filename) => {
         return {
@@ -49,6 +51,18 @@ describe('FilesController', () => {
         }
       })
     }
+
+    requestMock = {
+      user: {
+        id: '192b78fc-926b-4813-b4f9-277e20172e90',
+        login: 'test',
+        password: 'some pass'
+      }
+    }
+  });
+
+  afterAll( async () => {
+    await unlink('files/uuid')
   });
 
   describe('methods should be defined', () => {
@@ -72,13 +86,13 @@ describe('FilesController', () => {
         buffer: Buffer.from('test-content'),
       };
   
-      const res = await controller.upload(fileMock);
+      const res = await controller.upload(fileMock, requestMock);
       expect(res).toEqual({success: 'done'})
     });
 
     it('should download file from server', async () => {
       const filename = {filename: 'test-file.jpg'};
-      const fileStream = await controller.download(filename, response);
+      const fileStream = await controller.download(filename, responseMock);
       let data = '';
       const readable = fileStream.getStream().on('data', () => {});
 

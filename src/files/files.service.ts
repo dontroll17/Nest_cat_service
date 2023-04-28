@@ -12,9 +12,10 @@ export class FilesService {
     private readonly filesRepository: Repository<FilesEntity>,
   ) {}
 
-  async upload(file) {
+  async upload(file, login) {
     const req = await this.filesRepository.save({
       filename: file.originalname,
+      deployed: login
     });
     if (!req) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
