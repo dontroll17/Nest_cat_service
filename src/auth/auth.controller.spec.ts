@@ -71,6 +71,7 @@ describe('AuthController', () => {
       const res = await controller.register({
         login: 'tester',
         password: '12345678',
+        role: 'Admin',
       });
       expect(res).toEqual({ accessToken: expect.any(String) });
     });

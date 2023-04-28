@@ -23,7 +23,7 @@ export class AuthService {
   ) {}
 
   async genToken(user: User) {
-    const payload = { id: user.id, login: user.login };
+    const payload = { id: user.id, login: user.login, role: user.role };
     return { accessToken: this.jwtService.sign(payload) };
   }
 
@@ -39,6 +39,7 @@ export class AuthService {
       return {
         id: user.id,
         login: user.login,
+        role: user.role,
       };
     }
 
@@ -59,10 +60,17 @@ export class AuthService {
     });
 
     await this.auth.save(createUser);
-    return this.genToken({ id: createUser.id, login: createUser.login });
+    return this.genToken({
+      id: createUser.id,
+      login: createUser.login,
+      role: createUser.role,
+    });
   }
 
   async login(dto: UserDto) {
+    if (Object.keys(dto).length < 2) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
     const user = await this.validateUser(dto);
     return this.genToken(user);
   }

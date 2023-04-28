@@ -12,4 +12,10 @@ export class AuthEntity {
 
   @Column()
   password: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['Admin', 'User'],
+  })
+  role: 'Admin' | 'User';
 }
