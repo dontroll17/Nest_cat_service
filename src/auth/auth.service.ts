@@ -68,7 +68,7 @@ export class AuthService {
   }
 
   async login(dto: UserDto) {
-    if (Object.keys(dto).length < 3) {
+    if (Object.keys(dto).length < 2) {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     }
     const user = await this.validateUser(dto);

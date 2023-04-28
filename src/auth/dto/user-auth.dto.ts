@@ -9,8 +9,4 @@ export class UserDto {
   @IsString()
   @MinLength(8)
   password: string;
-
-  @IsNotEmpty()
-  @IsEnum({ Admin: 'Admin', User: 'User' })
-  role: 'Admin' | 'User';
 }

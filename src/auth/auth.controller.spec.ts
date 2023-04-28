@@ -63,7 +63,6 @@ describe('AuthController', () => {
       const res = await controller.login({
         login: 'cat',
         password: '12345678',
-        role: 'User',
       });
       expect(res).toEqual({ accessToken: expect.any(String) });
     });
