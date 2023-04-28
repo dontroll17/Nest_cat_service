@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Delete,
+  HttpCode,
   Post,
   Req,
   Res,
@@ -24,7 +26,7 @@ export class FilesController {
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(AuthGuard('jwt'))
   @Post('upload')
-  async upload(@UploadedFile() file, @Req() req) {
+  async upload(@UploadedFile() file, @Req() req):Promise<object> {
     const login = req.user.login;
     return await this.service.upload(file, login);
   }
@@ -33,7 +35,7 @@ export class FilesController {
   async download(
     @Body() dto: FileNameDto,
     @Res({ passthrough: true }) response: Response,
-  ) {
+  ): Promise<StreamableFile> {
     const filename = await this.service.download(dto);
     const file = createReadStream(join('files', filename.id));
     response.set({
@@ -41,5 +43,15 @@ export class FilesController {
       'Content-Disposition': `attachment; filename=${filename.filename}`,
     });
     return new StreamableFile(file);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('remove')
+  @HttpCode(204)
+  async removeFIle(
+    @Body() dto: FileNameDto,
+    @Req() req
+  ): Promise<void> {
+    return await this.service.removeFile(dto, req.user.login);
   }
 }

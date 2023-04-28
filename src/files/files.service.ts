@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilesEntity } from './entities/files.entity';
 import { Repository } from 'typeorm';
-import { writeFile } from 'fs/promises';
+import { unlink, writeFile } from 'fs/promises';
 import { FileNameDto } from './dto/file-name.dto';
 
 @Injectable()
@@ -38,5 +38,24 @@ export class FilesService {
       throw new HttpException('File not found', HttpStatus.BAD_REQUEST);
     }
     return { ...fileData };
+  }
+
+  async removeFile(dto: FileNameDto, login) {
+    const file = await this.filesRepository.findOne({
+      where: {
+        filename: dto.filename,
+        deployed: login
+      }
+    });
+    if (!file) {
+      throw new HttpException('File not found', HttpStatus.BAD_REQUEST);
+    }
+
+    const del = await this.filesRepository.delete(file);
+    if(del.affected === 0) {
+      throw new HttpException('file not found', HttpStatus.NOT_FOUND);
+    }
+
+    await unlink(`files/${file.id}`);
   }
 }
