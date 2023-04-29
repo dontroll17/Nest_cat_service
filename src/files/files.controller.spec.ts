@@ -31,8 +31,14 @@ describe('FilesController', () => {
               return Promise.resolve({
                 id: 'uuid',
                 filename: 'image.jpg',
+                deployed: 'test'
               });
             },
+            delete: () => {
+              return Promise.resolve({
+                raw: true, affected: 1
+              });
+            }
           },
         },
       ],
@@ -61,9 +67,14 @@ describe('FilesController', () => {
     };
   });
 
-  afterAll(async () => {
-    await unlink('files/uuid');
-  });
+  const fileMock = {
+    filename: 'file',
+    originalname: 'test-file.jpg',
+    encoding: '7bit',
+    mimetype: 'image/jpeg',
+    size: 1024,
+    buffer: Buffer.from('test-content'),
+  };
 
   describe('methods should be defined', () => {
     it('upload should be defined', () => {
@@ -77,17 +88,8 @@ describe('FilesController', () => {
 
   describe('call methods', () => {
     it('should save file on serve', async () => {
-      const fileMock = {
-        filename: 'file',
-        originalname: 'test-file.jpg',
-        encoding: '7bit',
-        mimetype: 'image/jpeg',
-        size: 1024,
-        buffer: Buffer.from('test-content'),
-      };
-
-      const res = await controller.upload(fileMock, requestMock);
-      expect(res).toEqual({ success: 'done' });
+      const req = await controller.upload(fileMock, requestMock);
+      expect(req).toEqual({ success: 'done' });
     });
 
     it('should download file from server', async () => {
@@ -101,6 +103,18 @@ describe('FilesController', () => {
       }
 
       expect(data).toEqual('test-content');
+
+      await unlink('files/uuid');
+    });
+
+    it('should remove file from server', async () => {
+      const req = await controller.upload(fileMock, requestMock);
+      console.log(req);
+      expect(req).toEqual({ success: 'done' });
+
+      const filename = { filename: 'test-file.jpg' };
+      const del = await controller.removeFIle(filename, requestMock);
+      console.log(del)
     });
   });
 });
