@@ -109,12 +109,12 @@ describe('FilesController', () => {
 
     it('should remove file from server', async () => {
       const req = await controller.upload(fileMock, requestMock);
-      console.log(req);
+      
       expect(req).toEqual({ success: 'done' });
 
       const filename = { filename: 'test-file.jpg' };
       const del = await controller.removeFIle(filename, requestMock);
-      console.log(del)
+      expect(del).toBeUndefined()
     });
   });
 });
