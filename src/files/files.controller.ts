@@ -31,12 +31,15 @@ export class FilesController {
     return await this.service.upload(file, login);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('download')
   async download(
     @Body() dto: FileNameDto,
     @Res({ passthrough: true }) response: Response,
+    @Req() req
   ): Promise<StreamableFile> {
-    const filename = await this.service.download(dto);
+    const login = req.user.login
+    const filename = await this.service.download(dto, login);
     const file = createReadStream(join('files', filename.id));
     response.set({
       'Content-Type': 'application/json',
@@ -52,6 +55,7 @@ export class FilesController {
     @Body() dto: FileNameDto,
     @Req() req
   ): Promise<void> {
-    return await this.service.removeFile(dto, req.user.login);
+    const login = req.user.login;
+    return await this.service.removeFile(dto, login);
   }
 }

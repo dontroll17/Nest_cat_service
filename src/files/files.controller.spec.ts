@@ -94,7 +94,7 @@ describe('FilesController', () => {
 
     it('should download file from server', async () => {
       const filename = { filename: 'test-file.jpg' };
-      const fileStream = await controller.download(filename, responseMock);
+      const fileStream = await controller.download(filename, responseMock, requestMock);
       let data = '';
       const readable = fileStream.getStream().on('data', () => {});
 

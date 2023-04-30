@@ -28,7 +28,7 @@ export class FilesService {
     return { success: 'done' };
   }
 
-  async download(dto: FileNameDto) {
+  async download(dto: FileNameDto, login) {
     const fileData = await this.filesRepository.findOne({
       where: {
         filename: dto.filename,
@@ -36,6 +36,9 @@ export class FilesService {
     });
     if (!fileData) {
       throw new HttpException('File not found', HttpStatus.BAD_REQUEST);
+    }
+    if(login !== fileData.deployed) {
+      throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
     }
     return { ...fileData };
   }

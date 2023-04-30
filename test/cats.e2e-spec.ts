@@ -71,13 +71,13 @@ describe('should GET /cats', () => {
       { nick: 'llort', role: 'top guy', vacant: true, coast: 500 },
     ]);
 
-    const { body } = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer())
       .get('/cats')
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
-      .expect(200);
+      .expect(200)
 
-    expect(body).toEqual([
+    expect(res.body).toEqual([
       {
         id: expect.any(String),
         nick: 'troll',
@@ -93,6 +93,8 @@ describe('should GET /cats', () => {
         coast: 500,
       },
     ]);
+
+    expect(res.headers['x-powered-by']).toContain('Express');
   });
 });
 
