@@ -38,4 +38,13 @@ describe('Negative tests', () => {
 
     expect(res.text).toBe('{"statusCode":400,"message":"Bad request"}');
   });
+
+  it('should return bad request', async () => {
+    const badData = {login: '123'}
+    const res = await request(app.getHttpServer())
+      .post("/auth/register")
+      .send(badData)
+      .expect(400);
+    console.log(res);
+  })
 });
