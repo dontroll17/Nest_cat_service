@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { FilesEntity } from 'src/files/entities/files.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class CatsEntity {
@@ -13,8 +14,9 @@ export class CatsEntity {
   @Column()
   role: string;
 
-  @Column()
-  vacant: boolean;
+  @ManyToOne(() => FilesEntity, (file) => file.id, {onDelete: 'SET NULL'})
+  @JoinColumn({name: 'job_id'})
+  job: string;
 
   @Column()
   coast: number;

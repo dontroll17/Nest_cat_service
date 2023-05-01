@@ -25,7 +25,8 @@ CREATE TABLE auth (
 CREATE TABLE files (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     filename VARCHAR(255) NOT NULL UNIQUE,
-    deployed VARCHAR(255) NOT NULL
+    deployed VARCHAR(255) NOT NULL,
+    inwork uuid[] DEFAULT NULL
 );\n`;
 
 const main = async () => {

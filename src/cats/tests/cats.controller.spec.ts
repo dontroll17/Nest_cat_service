@@ -96,7 +96,7 @@ describe('CatsController', () => {
       const fakeCat = {
         nick: 'new nick',
         role: 'new role',
-        vacant: true,
+        job: null,
         coast: 500,
       };
       await mock.save(fakeCatEntity);
@@ -106,7 +106,7 @@ describe('CatsController', () => {
         id: expect.any(String),
         nick: 'new nick',
         role: 'new role',
-        vacant: true,
+        job: null,
         coast: 500,
       });
     });

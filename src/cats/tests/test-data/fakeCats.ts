@@ -1,7 +1,6 @@
 export const fakeCat = {
   nick: 'IIaIIIKa',
   role: 'killer',
-  vacant: true,
   coast: 500,
 };
 

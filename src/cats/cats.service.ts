@@ -52,7 +52,7 @@ export class CatsService {
 
     cat = {
       id,
-      ...changeCatDto,
+      ...changeCatDto
     };
 
     await this.catRepo.save(cat);

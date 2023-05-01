@@ -31,7 +31,7 @@ export class FilesController {
   async upload(@UploadedFile(
     new ParseFilePipe({
       validators: [
-        new MaxFileSizeValidator( {maxSize: 1024 })
+        new MaxFileSizeValidator( {maxSize: 10240 })
       ]
     })
   ) file, @Req() req):Promise<object> {

@@ -20,7 +20,7 @@ import { FilesEntity } from './files/entities/files.entity';
       password: process.env.DB_PASS,
       database: process.env.DB_DATABASE,
       entities: [CatsEntity, AuthEntity, FilesEntity],
-      synchronize: false,
+      synchronize: true,
     }),
     AuthModule,
     FilesModule,

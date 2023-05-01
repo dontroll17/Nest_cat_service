@@ -19,7 +19,7 @@ export class CatsRepositoryMock {
       id: 'uuid',
       nick: dto.nick,
       role: dto.role,
-      vacant: dto.vacant,
+      job: null,
       coast: dto.coast,
     };
   }
