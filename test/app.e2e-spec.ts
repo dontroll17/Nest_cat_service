@@ -45,6 +45,5 @@ describe('Negative tests', () => {
       .post("/auth/register")
       .send(badData)
       .expect(400);
-    console.log(res);
   })
 });

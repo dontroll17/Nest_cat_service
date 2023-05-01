@@ -30,7 +30,7 @@ import { AdminMiddleware } from '../../src/middleware/admin.middleware';
     }),
     ThrottlerModule.forRoot({
       ttl: 60,
-      limit: 3,
+      limit: 5,
     }),
   ],
   exports: [AuthModule],

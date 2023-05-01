@@ -136,6 +136,34 @@ describe('route POST /cats', () => {
 
     expect(req.text).toBe('{"statusCode":400,"message":"Bad request"}');
   });
+
+  it('should return exeption POST /cats', async () => {
+    const { body } = await request(app.getHttpServer())
+    .post('/cats')
+    .send({
+      nick: 'test',
+      role: 'tester',
+      vacant: true,
+      coast: 500,
+    })
+    .set({ Authorization: 'Bearer ' + token.accessToken })
+    .set('Accept', 'applization/json')
+    .expect('Content-Type', /json/)
+    .expect(201);
+
+    await request(app.getHttpServer())
+    .post('/cats')
+    .send({
+      nick: 'test',
+      role: 'tester',
+      vacant: true,
+      coast: 500,
+    })
+    .set({ Authorization: 'Bearer ' + token.accessToken })
+    .set('Accept', 'applization/json')
+    .expect('Content-Type', /json/)
+    .expect(400);
+  });
 });
 
 describe('should DELETE /cats/:id', () => {
