@@ -1,5 +1,5 @@
-import { FilesEntity } from 'src/files/entities/files.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { FilesEntity } from '../../files/entities/files.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class CatsEntity {
