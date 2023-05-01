@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   HttpCode,
+  MaxFileSizeValidator,
+  ParseFilePipe,
   Post,
   Req,
   Res,
@@ -26,7 +28,13 @@ export class FilesController {
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(AuthGuard('jwt'))
   @Post('upload')
-  async upload(@UploadedFile() file, @Req() req):Promise<object> {
+  async upload(@UploadedFile(
+    new ParseFilePipe({
+      validators: [
+        new MaxFileSizeValidator( {maxSize: 1024 })
+      ]
+    })
+  ) file, @Req() req):Promise<object> {
     const login = req.user.login;
     return await this.service.upload(file, login);
   }

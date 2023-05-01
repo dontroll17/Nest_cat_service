@@ -5,7 +5,7 @@ import { CatsEntity } from './cats/entities/cats.entity';
 import { AuthModule } from './auth/auth.module';
 import 'dotenv/config';
 import { AuthEntity } from './auth/entities/auth.entitty';
-import { RequestLoggerMiddleware } from './middleware/logger.middlewars';
+import { RequestLoggerMiddleware } from './middleware/logger.middleware';
 import { FilesModule } from './files/files.module';
 import { FilesEntity } from './files/entities/files.entity';
 

@@ -12,6 +12,7 @@ import { AuthEntity } from '../src/auth/entities/auth.entitty';
 import { JwtService } from '@nestjs/jwt';
 import { JWT } from 'src/auth/interface/jwt.interface';
 import { CacheModule, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Role } from '../src/auth/dto/create-user.dto';
 
 let app: INestApplication;
 let repository: Repository<CatsEntity>;
@@ -51,7 +52,7 @@ beforeAll(async () => {
   token = await authService.register({
     login: 'test',
     password: '12345678',
-    role: 'Admin',
+    role: Role.Admin,
   });
 });
 
