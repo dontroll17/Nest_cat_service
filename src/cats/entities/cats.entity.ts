@@ -23,7 +23,7 @@ export class CatsEntity {
   @Column()
   coast: number;
 
-  @ManyToMany(() => FilesEntity, { onDelete: 'SET NULL' })
+  @ManyToMany(() => FilesEntity, { onDelete: 'CASCADE' })
   @JoinTable({
     name: 'task',
     joinColumn: {

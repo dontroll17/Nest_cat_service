@@ -64,7 +64,7 @@ export class CatsService {
   }
 
   async assignTask(dto: AssignTaskDto) {
-    const cat = await this.catRepo.findOne({ where: { nick: dto.catNick } });
+    const cat = await this.catRepo.findOne({ where: { nick: dto.nick } });
     const file = await this.fileRepo.findOne({
       where: { filename: dto.filename },
     });
@@ -79,4 +79,9 @@ export class CatsService {
     cat.job.push(file);
     return await this.catRepo.save(cat);
   }
+
+  // SELECT f.filename, f.deployed, c.nick AS Worker, c.role
+  // FROM files f
+  // JOIN task t ON f.id = t.file_id
+  // JOIN cats c ON t.cats_id = c.id;
 }

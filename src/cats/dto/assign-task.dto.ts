@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class AssignTaskDto {
   @IsNotEmpty()
   @IsString()
-  catNick: string;
+  nick: string;
 
   @IsNotEmpty()
   @IsString()

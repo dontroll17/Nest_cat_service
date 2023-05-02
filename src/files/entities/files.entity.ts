@@ -18,7 +18,7 @@ export class FilesEntity {
   @Column()
   deployed: string;
 
-  @ManyToMany(() => CatsEntity, { onDelete: 'SET NULL' })
+  @ManyToMany(() => CatsEntity, { onDelete: 'CASCADE' })
   @JoinTable({
     name: 'task',
     joinColumn: {
