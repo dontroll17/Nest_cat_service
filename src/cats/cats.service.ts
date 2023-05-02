@@ -56,7 +56,7 @@ export class CatsService {
 
     cat = {
       id,
-      ...changeCatDto
+      ...changeCatDto,
     };
 
     await this.catRepo.save(cat);
@@ -64,13 +64,15 @@ export class CatsService {
   }
 
   async assignTask(dto: AssignTaskDto) {
-    const cat = await this.catRepo.findOne({where: {nick: dto.catNick}});
-    const file = await this.fileRepo.findOne({where: {filename: dto.filename}})
-    if(!cat || !file) {
+    const cat = await this.catRepo.findOne({ where: { nick: dto.catNick } });
+    const file = await this.fileRepo.findOne({
+      where: { filename: dto.filename },
+    });
+    if (!cat || !file) {
       throw new HttpException('File or cat not found', HttpStatus.NOT_FOUND);
     }
 
-    if(!cat.job) {
+    if (!cat.job) {
       cat.job = [];
     }
 

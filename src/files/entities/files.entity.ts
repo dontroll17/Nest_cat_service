@@ -1,5 +1,11 @@
 import { CatsEntity } from '../../cats/entities/cats.entity';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('files')
 export class FilesEntity {
@@ -12,17 +18,17 @@ export class FilesEntity {
   @Column()
   deployed: string;
 
-  @ManyToMany(() => CatsEntity, {onDelete: 'SET NULL'})
+  @ManyToMany(() => CatsEntity, { onDelete: 'SET NULL' })
   @JoinTable({
     name: 'task',
     joinColumn: {
       name: 'file_id',
-      referencedColumnName: 'id'
+      referencedColumnName: 'id',
     },
     inverseJoinColumn: {
       name: 'cats_id',
-      referencedColumnName: 'id'
-    }
+      referencedColumnName: 'id',
+    },
   })
   inwork: CatsEntity[];
 }

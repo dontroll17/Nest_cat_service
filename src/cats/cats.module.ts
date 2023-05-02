@@ -9,6 +9,9 @@ import { FilesEntity } from '../../src/files/entities/files.entity';
 @Module({
   controllers: [CatsController],
   providers: [CatsService],
-  imports: [TypeOrmModule.forFeature([CatsEntity, FilesEntity]), CacheModule.register()],
+  imports: [
+    TypeOrmModule.forFeature([CatsEntity, FilesEntity]),
+    CacheModule.register(),
+  ],
 })
 export class CatsModule {}

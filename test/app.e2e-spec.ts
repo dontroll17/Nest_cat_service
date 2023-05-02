@@ -40,10 +40,10 @@ describe('Negative tests', () => {
   });
 
   it('should return bad request', async () => {
-    const badData = {login: '123'}
+    const badData = { login: '123' };
     const res = await request(app.getHttpServer())
-      .post("/auth/register")
+      .post('/auth/register')
       .send(badData)
       .expect(400);
-  })
+  });
 });

@@ -31,14 +31,15 @@ describe('FilesController', () => {
               return Promise.resolve({
                 id: 'uuid',
                 filename: 'image.jpg',
-                deployed: 'test'
+                deployed: 'test',
               });
             },
             delete: () => {
               return Promise.resolve({
-                raw: true, affected: 1
+                raw: true,
+                affected: 1,
               });
-            }
+            },
           },
         },
       ],
@@ -94,7 +95,11 @@ describe('FilesController', () => {
 
     it('should download file from server', async () => {
       const filename = { filename: 'test-file.jpg' };
-      const fileStream = await controller.download(filename, responseMock, requestMock);
+      const fileStream = await controller.download(
+        filename,
+        responseMock,
+        requestMock,
+      );
       let data = '';
       const readable = fileStream.getStream().on('data', () => {});
 
@@ -109,12 +114,12 @@ describe('FilesController', () => {
 
     it('should remove file from server', async () => {
       const req = await controller.upload(fileMock, requestMock);
-      
+
       expect(req).toEqual({ success: 'done' });
 
       const filename = { filename: 'test-file.jpg' };
       const del = await controller.removeFIle(filename, requestMock);
-      expect(del).toBeUndefined()
+      expect(del).toBeUndefined();
     });
   });
 });

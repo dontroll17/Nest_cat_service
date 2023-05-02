@@ -3,7 +3,7 @@ import { UserDto } from './user-auth.dto';
 
 export enum Role {
   Admin = 'Admin',
-  User = 'User'
+  User = 'User',
 }
 
 export class CreateUserDto extends UserDto {

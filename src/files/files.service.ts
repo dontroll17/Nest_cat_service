@@ -37,7 +37,7 @@ export class FilesService {
     if (!fileData) {
       throw new HttpException('File not found', HttpStatus.BAD_REQUEST);
     }
-    if(login !== fileData.deployed) {
+    if (login !== fileData.deployed) {
       throw new HttpException('FORBIDDEN', HttpStatus.FORBIDDEN);
     }
     return { ...fileData };
@@ -47,15 +47,15 @@ export class FilesService {
     const file = await this.filesRepository.findOne({
       where: {
         filename: dto.filename,
-        deployed: login
-      }
+        deployed: login,
+      },
     });
     if (!file) {
       throw new HttpException('File not found', HttpStatus.BAD_REQUEST);
     }
 
     const del = await this.filesRepository.delete(file);
-    if(del.affected === 0) {
+    if (del.affected === 0) {
       throw new HttpException('file not found', HttpStatus.NOT_FOUND);
     }
 

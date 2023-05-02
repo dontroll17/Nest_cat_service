@@ -28,13 +28,15 @@ export class FilesController {
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(AuthGuard('jwt'))
   @Post('upload')
-  async upload(@UploadedFile(
-    new ParseFilePipe({
-      validators: [
-        new MaxFileSizeValidator( {maxSize: 10240 })
-      ]
-    })
-  ) file, @Req() req):Promise<object> {
+  async upload(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new MaxFileSizeValidator({ maxSize: 10240 })],
+      }),
+    )
+    file,
+    @Req() req,
+  ): Promise<object> {
     const login = req.user.login;
     return await this.service.upload(file, login);
   }
@@ -44,9 +46,9 @@ export class FilesController {
   async download(
     @Body() dto: FileNameDto,
     @Res({ passthrough: true }) response: Response,
-    @Req() req
+    @Req() req,
   ): Promise<StreamableFile> {
-    const login = req.user.login
+    const login = req.user.login;
     const filename = await this.service.download(dto, login);
     const file = createReadStream(join('files', filename.id));
     response.set({
@@ -59,10 +61,7 @@ export class FilesController {
   @UseGuards(AuthGuard('jwt'))
   @Delete('remove')
   @HttpCode(204)
-  async removeFIle(
-    @Body() dto: FileNameDto,
-    @Req() req
-  ): Promise<void> {
+  async removeFIle(@Body() dto: FileNameDto, @Req() req): Promise<void> {
     const login = req.user.login;
     return await this.service.removeFile(dto, login);
   }

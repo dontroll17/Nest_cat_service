@@ -77,7 +77,7 @@ describe('should GET /cats', () => {
       .get('/cats')
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
-      .expect(200)
+      .expect(200);
 
     expect(res.body).toEqual([
       {
@@ -136,29 +136,29 @@ describe('route POST /cats', () => {
 
   it('should return exeption POST /cats', async () => {
     const { body } = await request(app.getHttpServer())
-    .post('/cats')
-    .send({
-      nick: 'test',
-      role: 'tester',
-      
-      coast: 500,
-    })
-    .set({ Authorization: 'Bearer ' + token.accessToken })
-    .set('Accept', 'applization/json')
-    .expect('Content-Type', /json/)
-    .expect(201);
+      .post('/cats')
+      .send({
+        nick: 'test',
+        role: 'tester',
+
+        coast: 500,
+      })
+      .set({ Authorization: 'Bearer ' + token.accessToken })
+      .set('Accept', 'applization/json')
+      .expect('Content-Type', /json/)
+      .expect(201);
 
     await request(app.getHttpServer())
-    .post('/cats')
-    .send({
-      nick: 'test',
-      role: 'tester',
-      coast: 500,
-    })
-    .set({ Authorization: 'Bearer ' + token.accessToken })
-    .set('Accept', 'applization/json')
-    .expect('Content-Type', /json/)
-    .expect(400);
+      .post('/cats')
+      .send({
+        nick: 'test',
+        role: 'tester',
+        coast: 500,
+      })
+      .set({ Authorization: 'Bearer ' + token.accessToken })
+      .set('Accept', 'applization/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
   });
 });
 
@@ -188,7 +188,7 @@ describe('should DELETE /cats/:id', () => {
         id: expect.any(String),
         nick: 'test2',
         role: 'main tester',
-        
+
         coast: 500,
       },
     ]);
@@ -200,7 +200,7 @@ describe('should PUT /cats/:id', () => {
     const testData = {
       nick: 'test cat',
       role: 'test cat',
-      
+
       coast: 500,
     };
     await repository.save(testData);
@@ -211,7 +211,7 @@ describe('should PUT /cats/:id', () => {
       .send({
         nick: 'test',
         role: 'tester',
-        
+
         coast: 500,
       })
       .set({ Authorization: 'Bearer ' + token.accessToken })

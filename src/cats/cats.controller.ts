@@ -80,9 +80,7 @@ export class CatsController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @SetMetadata('roles', ['Admin'])
   @Post('job')
-  async assignTask(
-    @Body() dto: AssignTaskDto
-  ) {
+  async assignTask(@Body() dto: AssignTaskDto) {
     return await this.service.assignTask(dto);
   }
 }
