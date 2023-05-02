@@ -1,7 +1,7 @@
 import { FilesEntity } from '../../files/entities/files.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('cats')
 export class CatsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -14,10 +14,10 @@ export class CatsEntity {
   @Column()
   role: string;
 
-  @ManyToOne(() => FilesEntity, (file) => file.id, {onDelete: 'SET NULL'})
-  @JoinColumn({name: 'job_id'})
-  job: string;
-
   @Column()
   coast: number;
+
+  @ManyToMany(() => FilesEntity, (file) => file.id, {onDelete: 'SET NULL'})
+  @JoinTable()
+  job: FilesEntity[];
 }

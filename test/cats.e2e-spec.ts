@@ -63,7 +63,7 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  await repository.query('DELETE FROM cats_entity;');
+  await repository.query('DELETE FROM cats;');
 });
 
 describe('should GET /cats', () => {

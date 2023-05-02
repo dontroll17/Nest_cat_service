@@ -1,5 +1,5 @@
 import { CatsEntity } from '../../cats/entities/cats.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('files')
 export class FilesEntity {
@@ -12,6 +12,6 @@ export class FilesEntity {
   @Column()
   deployed: string;
 
-  @OneToMany(() => CatsEntity, (cats) => cats.id, {onDelete: 'SET NULL'})
+  @ManyToMany(() => CatsEntity, (cats) => cats.id, {onDelete: 'SET NULL'})
   inwork: CatsEntity[];
 }
