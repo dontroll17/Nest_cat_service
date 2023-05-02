@@ -17,7 +17,17 @@ export class CatsEntity {
   @Column()
   coast: number;
 
-  @ManyToMany(() => FilesEntity, (file) => file.id, {onDelete: 'SET NULL'})
-  @JoinTable()
+  @ManyToMany(() => FilesEntity, {onDelete: 'SET NULL'})
+  @JoinTable({
+    name: 'task',
+    joinColumn: {
+      name: 'cats_id',
+      referencedColumnName: 'id'
+    },
+    inverseJoinColumn: {
+      name: 'file_id',
+      referencedColumnName: 'id'
+    }
+  })
   job: FilesEntity[];
 }

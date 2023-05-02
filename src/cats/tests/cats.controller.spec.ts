@@ -8,6 +8,7 @@ import { CatsRepositoryMock } from './__mock__/FakeRepo';
 import { fakeCat } from './test-data/fakeCats';
 import { fakeCatEntity } from './test-data/fakeEntity';
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
+import { FilesEntity } from '../../../src/files/entities/files.entity';
 
 describe('CatsController', () => {
   let controller: CatsController;
@@ -22,6 +23,10 @@ describe('CatsController', () => {
         {
           provide: getRepositoryToken(CatsEntity),
           useClass: CatsRepositoryMock,
+        },
+        {
+          provide: getRepositoryToken(FilesEntity),
+          useValue: {},
         },
       ],
       imports: [CacheModule.register()],
