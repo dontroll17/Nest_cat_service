@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CatsEntity } from './entities/cats.entity';
 import { Repository } from 'typeorm';
@@ -23,7 +23,7 @@ export class CatsService {
   async getById(id): Promise<CatsEntity> {
     const cat = await this.catRepo.findOne({ where: { id } });
     if (!cat) {
-      throw new HttpException('Cat not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('Cat not found');
     }
     return cat;
   }
@@ -33,7 +33,7 @@ export class CatsService {
       const cat = this.catRepo.create(dto);
       return await this.catRepo.save(cat);
     } catch (e) {
-      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException('Bad request');
     }
   }
 
@@ -41,7 +41,7 @@ export class CatsService {
     const cat = await this.catRepo.delete(id);
 
     if (cat.affected === 0) {
-      throw new HttpException('Cat not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('Cat not found');
     }
   }
 
@@ -51,7 +51,7 @@ export class CatsService {
     });
 
     if (!cat) {
-      throw new HttpException('Cat not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('Cat not found');
     }
 
     cat = {
@@ -69,7 +69,7 @@ export class CatsService {
       where: { filename: dto.filename },
     });
     if (!cat || !file) {
-      throw new HttpException('File or cat not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('File or cat not found');
     }
 
     if (!cat.job) {

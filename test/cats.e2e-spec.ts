@@ -131,7 +131,7 @@ describe('route POST /cats', () => {
       .expect('Content-Type', /json/)
       .expect(400);
 
-    expect(req.text).toBe('{"statusCode":400,"message":"Bad request"}');
+    expect(req.text).toBe('{"statusCode":400,"message":"Bad request",\"error\":\"Bad Request\"}');
   });
 
   it('should return exeption POST /cats', async () => {
