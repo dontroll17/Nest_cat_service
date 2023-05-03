@@ -1,6 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { FilesEntity } from '../../files/entities/files.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity()
+@Entity('cats')
 export class CatsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -14,8 +21,19 @@ export class CatsEntity {
   role: string;
 
   @Column()
-  vacant: boolean;
-
-  @Column()
   coast: number;
+
+  @ManyToMany(() => FilesEntity, { onDelete: 'CASCADE' })
+  @JoinTable({
+    name: 'task',
+    joinColumn: {
+      name: 'cats_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'file_id',
+      referencedColumnName: 'id',
+    },
+  })
+  job: FilesEntity[];
 }

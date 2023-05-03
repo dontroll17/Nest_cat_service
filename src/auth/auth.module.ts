@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthEntity } from './entities/auth.entitty';
@@ -8,6 +8,7 @@ import 'dotenv/config';
 import { JwtStrategy } from './jwt.strategy';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { AdminMiddleware } from '../../src/middleware/admin.middleware';
 
 @Module({
   controllers: [AuthController],
@@ -29,9 +30,13 @@ import { APP_GUARD } from '@nestjs/core';
     }),
     ThrottlerModule.forRoot({
       ttl: 60,
-      limit: 3,
+      limit: 5,
     }),
   ],
   exports: [AuthModule],
 })
-export class AuthModule {}
+export class AuthModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AdminMiddleware).forRoutes('auth/register');
+  }
+}

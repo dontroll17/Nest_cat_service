@@ -5,7 +5,8 @@ import { Repository } from 'typeorm';
 import { AuthEntity } from './entities/auth.entitty';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
+import { Role } from './dto/create-user.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -71,7 +72,7 @@ describe('AuthController', () => {
       const res = await controller.register({
         login: 'tester',
         password: '12345678',
-        role: 'Admin',
+        role: Role.Admin,
       });
       expect(res).toEqual({ accessToken: expect.any(String) });
     });

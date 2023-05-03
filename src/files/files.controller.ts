@@ -1,6 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
+  FileTypeValidator,
+  HttpCode,
+  MaxFileSizeValidator,
+  ParseFilePipe,
   Post,
   Req,
   Res,
@@ -24,22 +29,44 @@ export class FilesController {
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(AuthGuard('jwt'))
   @Post('upload')
-  async upload(@UploadedFile() file, @Req() req) {
+  async upload(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10240 }),
+          new FileTypeValidator({fileType: /\.(jpg|jpeg|png)$/})
+        ],
+      }),
+    )
+    file,
+    @Req() req,
+  ): Promise<object> {
     const login = req.user.login;
     return await this.service.upload(file, login);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('download')
   async download(
     @Body() dto: FileNameDto,
     @Res({ passthrough: true }) response: Response,
-  ) {
-    const filename = await this.service.download(dto);
-    const file = createReadStream(join('files', filename.id));
+    @Req() req,
+  ): Promise<StreamableFile> {
+    const login = req.user.login;
+    const file = await this.service.download(dto, login);
+    const fileStream = createReadStream(join('files', file.id));
     response.set({
       'Content-Type': 'application/json',
-      'Content-Disposition': `attachment; filename=${filename.filename}`,
+      'Content-Disposition': `attachment; filename=${file.filename}`,
     });
-    return new StreamableFile(file);
+    return new StreamableFile(fileStream);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('remove')
+  @HttpCode(204)
+  async removeFIle(@Body() dto: FileNameDto, @Req() req): Promise<void> {
+    const login = req.user.login;
+    return await this.service.removeFile(dto, login);
   }
 }

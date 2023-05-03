@@ -19,6 +19,7 @@ import { ChangeCatDto } from './dto/change-cat.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import { RolesGuard } from '../auth/roles.guard';
+import { AssignTaskDto } from './dto/assign-task.dto';
 
 @Controller('cats')
 export class CatsController {
@@ -74,5 +75,12 @@ export class CatsController {
     @Body() dto: ChangeCatDto,
   ): Promise<CatsEntity> {
     return await this.service.changeCat(id, dto);
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @SetMetadata('roles', ['Admin'])
+  @Post('job')
+  async assignTask(@Body() dto: AssignTaskDto) {
+    return await this.service.assignTask(dto);
   }
 }

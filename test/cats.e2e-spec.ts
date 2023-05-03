@@ -12,6 +12,8 @@ import { AuthEntity } from '../src/auth/entities/auth.entitty';
 import { JwtService } from '@nestjs/jwt';
 import { JWT } from 'src/auth/interface/jwt.interface';
 import { CacheModule, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Role } from '../src/auth/dto/create-user.dto';
+import { FilesEntity } from '../src/files/entities/files.entity';
 
 let app: INestApplication;
 let repository: Repository<CatsEntity>;
@@ -32,8 +34,8 @@ beforeAll(async () => {
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASS,
         database: process.env.DB_TEST_DATABASE,
-        entities: [CatsEntity, AuthEntity],
-        synchronize: false,
+        entities: [CatsEntity, AuthEntity, FilesEntity],
+        synchronize: true,
       }),
       TypeOrmModule.forFeature([AuthEntity]),
       CacheModule.register(),
@@ -51,7 +53,7 @@ beforeAll(async () => {
   token = await authService.register({
     login: 'test',
     password: '12345678',
-    role: 'Admin',
+    role: Role.Admin,
   });
 });
 
@@ -61,38 +63,38 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  await repository.query('DELETE FROM cats_entity;');
+  await repository.query('DELETE FROM cats;');
 });
 
 describe('should GET /cats', () => {
   it('should return an array of cats', async () => {
     await repository.save([
-      { nick: 'troll', role: 'lazy', vacant: true, coast: 500 },
-      { nick: 'llort', role: 'top guy', vacant: true, coast: 500 },
+      { nick: 'troll', role: 'lazy', coast: 500 },
+      { nick: 'llort', role: 'top guy', coast: 500 },
     ]);
 
-    const { body } = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer())
       .get('/cats')
       .set('Accept', 'applization/json')
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(body).toEqual([
+    expect(res.body).toEqual([
       {
         id: expect.any(String),
         nick: 'troll',
         role: 'lazy',
-        vacant: true,
         coast: 500,
       },
       {
         id: expect.any(String),
         nick: 'llort',
         role: 'top guy',
-        vacant: true,
         coast: 500,
       },
     ]);
+
+    expect(res.headers['x-powered-by']).toContain('Express');
   });
 });
 
@@ -103,7 +105,6 @@ describe('route POST /cats', () => {
       .send({
         nick: 'test',
         role: 'tester',
-        vacant: true,
         coast: 500,
       })
       .set({ Authorization: 'Bearer ' + token.accessToken })
@@ -115,7 +116,6 @@ describe('route POST /cats', () => {
       id: expect.any(String),
       nick: 'test',
       role: 'tester',
-      vacant: true,
       coast: 500,
     });
   });
@@ -131,15 +131,42 @@ describe('route POST /cats', () => {
       .expect('Content-Type', /json/)
       .expect(400);
 
-    expect(req.text).toBe('{"statusCode":400,"message":"Bad request"}');
+    expect(req.text).toBe('{"statusCode":400,"message":"Bad request",\"error\":\"Bad Request\"}');
+  });
+
+  it('should return exeption POST /cats', async () => {
+    const { body } = await request(app.getHttpServer())
+      .post('/cats')
+      .send({
+        nick: 'test',
+        role: 'tester',
+
+        coast: 500,
+      })
+      .set({ Authorization: 'Bearer ' + token.accessToken })
+      .set('Accept', 'applization/json')
+      .expect('Content-Type', /json/)
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post('/cats')
+      .send({
+        nick: 'test',
+        role: 'tester',
+        coast: 500,
+      })
+      .set({ Authorization: 'Bearer ' + token.accessToken })
+      .set('Accept', 'applization/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
   });
 });
 
 describe('should DELETE /cats/:id', () => {
   it('should remove cat', async () => {
     await repository.save([
-      { nick: 'test', role: 'tester', vacant: true, coast: 500 },
-      { nick: 'test2', role: 'main tester', vacant: true, coast: 500 },
+      { nick: 'test', role: 'tester', coast: 500 },
+      { nick: 'test2', role: 'main tester', coast: 500 },
     ]);
 
     const { body } = await request(app.getHttpServer())
@@ -161,7 +188,7 @@ describe('should DELETE /cats/:id', () => {
         id: expect.any(String),
         nick: 'test2',
         role: 'main tester',
-        vacant: true,
+
         coast: 500,
       },
     ]);
@@ -173,7 +200,7 @@ describe('should PUT /cats/:id', () => {
     const testData = {
       nick: 'test cat',
       role: 'test cat',
-      vacant: true,
+
       coast: 500,
     };
     await repository.save(testData);
@@ -184,7 +211,7 @@ describe('should PUT /cats/:id', () => {
       .send({
         nick: 'test',
         role: 'tester',
-        vacant: true,
+
         coast: 500,
       })
       .set({ Authorization: 'Bearer ' + token.accessToken })
@@ -199,7 +226,6 @@ describe('should PUT /cats/:id', () => {
       id: expect.any(String),
       nick: 'test',
       role: 'tester',
-      vacant: true,
       coast: 500,
     });
   });

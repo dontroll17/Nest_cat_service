@@ -1,7 +1,7 @@
 export const fakeCatEntity = {
   id: 'uuid',
   nick: 'IIaIIIKa',
+  job: null,
   role: 'killer',
-  vacant: true,
   coast: 500,
 };

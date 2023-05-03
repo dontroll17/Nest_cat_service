@@ -10,7 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user-auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import 'dotenv/config';
 import { User } from './interface/user.interface';
 
@@ -47,6 +47,9 @@ export class AuthService {
   }
 
   async register(dto: CreateUserDto) {
+    if (Object.keys(dto).length < 3) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    }
     const user = await this.auth.findOne({ where: { login: dto.login } });
     if (user) {
       throw new HttpException('user already register', HttpStatus.CONFLICT);
