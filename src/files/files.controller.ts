@@ -53,13 +53,13 @@ export class FilesController {
     @Req() req,
   ): Promise<StreamableFile> {
     const login = req.user.login;
-    const filename = await this.service.download(dto, login);
-    const file = createReadStream(join('files', filename.id));
+    const file = await this.service.download(dto, login);
+    const fileStream = createReadStream(join('files', file.id));
     response.set({
       'Content-Type': 'application/json',
-      'Content-Disposition': `attachment; filename=${filename.filename}`,
+      'Content-Disposition': `attachment; filename=${file.filename}`,
     });
-    return new StreamableFile(file);
+    return new StreamableFile(fileStream);
   }
 
   @UseGuards(AuthGuard('jwt'))
