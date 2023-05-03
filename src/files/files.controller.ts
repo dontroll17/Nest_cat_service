@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   HttpCode,
   MaxFileSizeValidator,
   ParseFilePipe,
@@ -31,7 +32,10 @@ export class FilesController {
   async upload(
     @UploadedFile(
       new ParseFilePipe({
-        validators: [new MaxFileSizeValidator({ maxSize: 10240 })],
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10240 }),
+          new FileTypeValidator({fileType: /\.(jpg|jpeg|png)$/})
+        ],
       }),
     )
     file,
