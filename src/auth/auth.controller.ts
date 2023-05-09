@@ -3,11 +3,13 @@ import { UserDto } from './dto/user-auth.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { JWT } from './interface/jwt.interface';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
   constructor(private service: AuthService) {}
 
+  @ApiBearerAuth()
   @Post('login')
   @HttpCode(200)
   async login(@Body() userDto: UserDto): Promise<JWT> {
